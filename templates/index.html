@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karıyı Kızdırmama Oyunu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="game-intro">
+            <h1>Karıyı Kızdırmama Oyunu</h1>
+            <h2>Evlilikte Hayatta Kalma Rehberi</h2>
+            
+            <div class="intro-text">
+                <p>Evli bir erkek olarak günlük hayatta eşini kızdırmadan yaşamaya çalışıyorsun. 
+                   Önünde 10 farklı senaryo var ve her birinde iki seçenek mevcut.</p>
+                
+                <p>Seçimlerin bir sonraki senaryoyu ve eşinin tepkisini belirleyecek. 
+                   Çok fazla yanlış karar verirsen boşanabilirsin! Ama tüm 10 senaryodan sağ çıkarsan, 
+                   mutlu bir evliliğin devam edecek... en azından bir sonraki zorluğa kadar!</p>
+                
+                <p>Oyun, Türk kültüründeki yaygın ilişki dinamiklerine dayalı abartılı, komik durumlar içerir. 
+                   Dramatik tepkiler, yanlış anlaşılmalar ve beklenmedik sonuçlara hazır ol!</p>
+            </div>
+            
+            <div class="start-button">
+                <a href="{{ url_for('start_game') }}" class="btn">Oyuna Başla</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

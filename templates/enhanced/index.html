@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karıyı Kızdırmama Oyunu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/enhanced.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="game-header">
+            <h1>Karıyı Kızdırmama Oyunu</h1>
+            <h2>Evlilikte Hayatta Kalma Rehberi</h2>
+        </div>
+        
+        <div class="game-intro">
+            <div class="intro-text">
+                <p><i class="fas fa-exclamation-triangle"></i> <strong>Uyarı:</strong> Evli bir erkek olarak günlük hayatta eşini kızdırmadan yaşamaya çalışıyorsun. 
+                   Önünde 10 farklı senaryo var ve her birinde iki seçenek mevcut.</p>
+                
+                <p><i class="fas fa-chess"></i> Seçimlerin bir sonraki senaryoyu ve eşinin tepkisini belirleyecek. 
+                   Çok fazla yanlış karar verirsen boşanabilirsin! Ama tüm 10 senaryodan sağ çıkarsan, 
+                   mutlu bir evliliğin devam edecek... en azından bir sonraki zorluğa kadar!</p>
+                
+                <p><i class="fas fa-laugh-squint"></i> Oyun, Türk kültüründeki yaygın ilişki dinamiklerine dayalı abartılı, komik durumlar içerir. 
+                   Dramatik tepkiler, yanlış anlaşılmalar ve beklenmedik sonuçlara hazır ol!</p>
+            </div>
+            
+            <div class="possible-endings">
+                <h3><i class="fas fa-award"></i> Olası Sonlar</h3>
+                <ul>
+                    <li><strong>Mutlu Son:</strong> Eşini hiç kızdırmadın, evliliğin mükemmel!</li>
+                    <li><strong>Soğuk Savaş:</strong> Eşin birkaç gün seninle konuşmuyor.</li>
+                    <li><strong>Kayınvalide Müdahalesi:</strong> Eşin annesini çağırdı, artık evde üçüncüsünüz.</li>
+                    <li><strong>Kanepe Ending:</strong> Yatak odasına giremiyorsun, kanepede uyuyorsun.</li>
+                    <li><strong>Anında Boşanma:</strong> Eşin avukatını aradı bile!</li>
+                </ul>
+            </div>
+            
+            <div class="start-button">
+                <a href="{{ url_for('start_game') }}" class="btn">
+                    <i class="fas fa-play"></i> Oyuna Başla
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Add some simple animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const gameIntro = document.querySelector('.game-intro');
+            gameIntro.style.opacity = '0';
+            gameIntro.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                gameIntro.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                gameIntro.style.opacity = '1';
+                gameIntro.style.transform = 'translateY(0)';
+            }, 300);
+        });
+    </script>
+</body>
+</html>

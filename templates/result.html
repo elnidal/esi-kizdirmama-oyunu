@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oyun Sonucu - Karıyı Kızdırmama Oyunu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="result-container">
+            <h1>{{ ending.title }}</h1>
+            
+            <div class="result-description">
+                <p>{{ ending.description }}</p>
+            </div>
+            
+            <div class="score-summary">
+                <p>Toplam {{ total_scenarios }} senaryodan {{ wrong_choices }} tanesinde yanlış seçim yaptın.</p>
+                <p>{{ (total_scenarios - wrong_choices) / total_scenarios * 100 }}% başarı oranı!</p>
+            </div>
+            
+            <div class="restart-button">
+                <a href="{{ url_for('start_game') }}" class="btn">Tekrar Oyna</a>
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">Ana Sayfa</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

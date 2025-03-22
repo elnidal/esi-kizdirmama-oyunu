@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eşi Kızdırmama Oyunu - Dinamik Versiyon</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/enhanced.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .api-key-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .api-key-input {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .api-key-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .api-key-input button {
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .api-key-input button:hover {
+            background-color: #2980b9;
+        }
+        
+        .api-status {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .api-status.success {
+            color: #27ae60;
+        }
+        
+        .api-status.error {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="game-header">
+            <h1>Eşi Kızdırmama Oyunu</h1>
+            <h2>Dinamik Versiyon - 20 Zorlu Senaryo</h2>
+        </div>
+        
+        <div class="game-intro">
+            <div class="intro-text">
+                <p><i class="fas fa-exclamation-triangle"></i> <strong>Uyarı:</strong> Evli bir erkek olarak günlük hayatta eşini kızdırmadan yaşamaya çalışıyorsun. 
+                   Bu sefer karşında tam 20 farklı senaryo var ve her seçimin seni farklı bir senaryoya götürecek!</p>
+                
+                <p><i class="fas fa-chess"></i> Seçimlerin bir sonraki senaryoyu ve eşinin tepkisini belirleyecek. 
+                   Çok fazla yanlış karar verirsen boşanabilirsin! Ama tüm 20 senaryodan sağ çıkarsan, 
+                   mutlu bir evliliğin devam edecek... en azından bir sonraki zorluğa kadar!</p>
+                
+                <p><i class="fas fa-laugh-squint"></i> Bu dinamik versiyonda, her oyun farklı olacak! 
+                   Senaryolar OpenAI API kullanılarak gerçek zamanlı olarak oluşturulacak, böylece her seferinde yeni zorluklarla karşılaşacaksın.</p>
+                
+                <p><i class="fas fa-exclamation-circle"></i> <strong>Dikkat:</strong> Bu oyun artık daha zor! Doğru cevaplar daha az belirgin ve her seçim seni farklı bir yola götürecek.</p>
+            </div>
+            
+            <div class="api-key-section">
+                <h3><i class="fas fa-key"></i> OpenAI API Anahtarı</h3>
+                <p>Dinamik senaryolar için OpenAI API anahtarınızı girin. Eğer bir API anahtarınız yoksa, oyun önceden tanımlanmış senaryoları kullanacaktır.</p>
+                
+                <div class="api-key-input">
+                    <input type="text" id="apiKey" placeholder="OpenAI API Anahtarınızı buraya girin">
+                    <button id="setApiKey">Kaydet</button>
+                </div>
+                
+                <div class="api-status" id="apiStatus">API anahtarı girilmedi. Oyun sınırlı senaryolarla çalışacak.</div>
+            </div>
+            
+            <div class="possible-endings">
+                <h3><i class="fas fa-award"></i> Olası Sonlar</h3>
+                <ul>
+                    <li><strong>Mutlu Son:</strong> 0-1 yanlış - Eşini hiç kızdırmadın, evliliğin mükemmel!</li>
+                    <li><strong>Soğuk Savaş:</strong> 2-3 yanlış - Eşin birkaç gün seninle konuşmuyor.</li>
+                    <li><strong>Kayınvalide Müdahalesi:</strong> 4-5 yanlış - Eşin annesini çağırdı, artık evde üçüncüsünüz.</li>
+                    <li><strong>Kanepe Ending:</strong> 6-7 yanlış - Yatak odasına giremiyorsun, kanepede uyuyorsun.</li>
+                    <li><strong>Anında Boşanma:</strong> 8+ yanlış - Eşin avukatını aradı bile!</li>
+                </ul>
+            </div>
+            
+            <div class="start-button">
+                <a href="{{ url_for('start_game') }}" class="btn">
+                    <i class="fas fa-play"></i> Oyuna Başla
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Add some simple animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const gameIntro = document.querySelector('.game-intro');
+            gameIntro.style.opacity = '0';
+            gameIntro.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                gameIntro.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                gameIntro.style.opacity = '1';
+                gameIntro.style.transform = 'translateY(0)';
+            }, 300);
+            
+            // API Key handling
+            const apiKeyInput = document.getElementById('apiKey');
+            const setApiKeyButton = document.getElementById('setApiKey');
+            const apiStatus = document.getElementById('apiStatus');
+            
+            setApiKeyButton.addEventListener('click', function() {
+                const apiKey = apiKeyInput.value.trim();
+                
+                if (!apiKey) {
+                    apiStatus.textContent = 'Lütfen geçerli bir API anahtarı girin.';
+                    apiStatus.className = 'api-status error';
+                    return;
+                }
+                
+                // Send API key to server
+                fetch('/api/set_api_key', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ api_key: apiKey }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        apiStatus.textContent = 'API anahtarı başarıyla kaydedildi! Dinamik senaryolar kullanılacak.';
+                        apiStatus.className = 'api-status success';
+                    } else {
+                        apiStatus.textContent = data.message || 'API anahtarı kaydedilirken bir hata oluştu.';
+                        apiStatus.className = 'api-status error';
+                    }
+                })
+                .catch(error => {
+                    apiStatus.textContent = 'Bir hata oluştu: ' + error.message;
+                    apiStatus.className = 'api-status error';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

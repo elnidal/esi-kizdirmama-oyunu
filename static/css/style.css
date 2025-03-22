@@ -1,0 +1,180 @@
+/* Main Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Game Intro */
+.game-intro {
+    text-align: center;
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 50px;
+}
+
+.game-intro h1 {
+    color: #e74c3c;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.game-intro h2 {
+    color: #555;
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+}
+
+.intro-text {
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.intro-text p {
+    margin-bottom: 15px;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    background-color: #e74c3c;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #c0392b;
+}
+
+.btn-secondary {
+    background-color: #7f8c8d;
+}
+
+.btn-secondary:hover {
+    background-color: #636e72;
+}
+
+/* Scenario */
+.scenario-container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 50px;
+}
+
+.scenario-container h1 {
+    color: #e74c3c;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.scenario-description {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+/* Choices */
+.choices {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.choice-btn {
+    width: 100%;
+    padding: 15px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.3s;
+}
+
+.choice-btn:hover {
+    background-color: #2980b9;
+}
+
+/* Results */
+.result-container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 50px;
+    text-align: center;
+}
+
+.result-container h1 {
+    color: #e74c3c;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.result-description {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.score-summary {
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+
+.restart-button {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .game-intro h1 {
+        font-size: 2rem;
+    }
+    
+    .game-intro h2 {
+        font-size: 1.2rem;
+    }
+    
+    .scenario-container h1 {
+        font-size: 1.5rem;
+    }
+    
+    .scenario-description, .result-description {
+        font-size: 1rem;
+    }
+}

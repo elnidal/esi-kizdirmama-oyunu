@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ scenario.title }} - Karıyı Kızdırmama Oyunu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/enhanced.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="game-header">
+            <h1>Karıyı Kızdırmama Oyunu</h1>
+            <h2>Evlilikte Hayatta Kalma Rehberi</h2>
+        </div>
+        
+        <div class="scenario-container">
+            <div class="scenario-header">
+                <h2 class="scenario-title">{{ scenario.title }}</h2>
+                
+                <div class="scenario-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{ progress }}%;"></div>
+                    </div>
+                    <div class="progress-text">Senaryo {{ scenario_id }} / {{ total_scenarios }}</div>
+                </div>
+            </div>
+            
+            <div class="scenario-description">
+                <p>{{ scenario.description }}</p>
+            </div>
+            
+            <div class="scenario-image">
+                <img src="{{ url_for('static', filename='images/scenario_placeholder.jpg') }}" alt="Senaryo Görseli" onerror="this.src='https://via.placeholder.com/600x300?text=Senaryo+{{ scenario_id }}'">
+            </div>
+            
+            <div class="choices">
+                <form action="{{ url_for('make_choice') }}" method="post">
+                    <input type="hidden" name="scenario_id" value="{{ scenario_id }}">
+                    
+                    <button type="submit" name="choice" value="A" class="choice-btn">
+                        {{ scenario.choice_a }}
+                    </button>
+                    
+                    <button type="submit" name="choice" value="B" class="choice-btn">
+                        {{ scenario.choice_b }}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Add some simple animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const scenarioContainer = document.querySelector('.scenario-container');
+            scenarioContainer.style.opacity = '0';
+            scenarioContainer.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                scenarioContainer.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                scenarioContainer.style.opacity = '1';
+                scenarioContainer.style.transform = 'translateY(0)';
+            }, 300);
+            
+            // Add hover effects to choice buttons
+            const choiceButtons = document.querySelectorAll('.choice-btn');
+            choiceButtons.forEach(button => {
+                button.addEventListener('mouseover', function() {
+                    this.style.transform = 'translateY(-3px)';
+                    this.style.boxShadow = '0 6px 10px rgba(0, 0, 0, 0.15)';
+                });
+                
+                button.addEventListener('mouseout', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

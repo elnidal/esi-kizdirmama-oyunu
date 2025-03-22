@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ scenario.title }} - Karıyı Kızdırmama Oyunu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="scenario-container">
+            <h1>{{ scenario.title }}</h1>
+            
+            <div class="scenario-description">
+                <p>{{ scenario.description }}</p>
+            </div>
+            
+            <div class="choices">
+                <form action="{{ url_for('make_choice') }}" method="post">
+                    <div class="choice">
+                        <button type="submit" name="choice" value="A" class="choice-btn">
+                            {{ scenario.choice_a }}
+                        </button>
+                    </div>
+                    
+                    <div class="choice">
+                        <button type="submit" name="choice" value="B" class="choice-btn">
+                            {{ scenario.choice_b }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

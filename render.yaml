@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: esi-kizdirmama-oyunu
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn dynamic_game:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.0
+      - key: OPENAI_API_KEY
+        sync: false

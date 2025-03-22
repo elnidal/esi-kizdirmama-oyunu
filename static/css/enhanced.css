@@ -1,0 +1,440 @@
+/* Enhanced Styles for Karıyı Kızdırmama Oyunu */
+:root {
+    --primary-color: #e74c3c;
+    --secondary-color: #3498db;
+    --accent-color: #2ecc71;
+    --dark-color: #2c3e50;
+    --light-color: #ecf0f1;
+    --danger-color: #c0392b;
+    --warning-color: #f39c12;
+    --info-color: #2980b9;
+    --success-color: #27ae60;
+    --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--light-color);
+    color: var(--dark-color);
+    line-height: 1.6;
+    background-image: url('../images/background.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header */
+.game-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.game-header h1 {
+    font-size: 3rem;
+    color: var(--primary-color);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    margin-bottom: 10px;
+}
+
+.game-header h2 {
+    font-size: 1.5rem;
+    color: var(--dark-color);
+    font-weight: 400;
+}
+
+/* Game Intro */
+.game-intro {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-top: 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.game-intro::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: var(--primary-color);
+}
+
+.intro-text {
+    text-align: left;
+    margin: 30px 0;
+    font-size: 1.1rem;
+}
+
+.intro-text p {
+    margin-bottom: 15px;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 15px 35px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+    background-color: var(--danger-color);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--info-color);
+}
+
+.btn-success {
+    background-color: var(--accent-color);
+}
+
+.btn-success:hover {
+    background-color: var(--success-color);
+}
+
+/* Scenario */
+.scenario-container {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-top: 50px;
+    position: relative;
+    overflow: hidden;
+}
+
+.scenario-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: var(--secondary-color);
+}
+
+.scenario-header {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.scenario-title {
+    color: var(--secondary-color);
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+}
+
+.scenario-progress {
+    margin: 20px 0;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: var(--accent-color);
+    transition: width 0.5s ease;
+}
+
+.progress-text {
+    text-align: center;
+    margin-top: 5px;
+    font-size: 0.9rem;
+    color: #777;
+}
+
+.scenario-description {
+    font-size: 1.3rem;
+    margin-bottom: 30px;
+    padding: 25px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    border-left: 5px solid var(--secondary-color);
+}
+
+.scenario-image {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.scenario-image img {
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Choices */
+.choices {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.choice-btn {
+    width: 100%;
+    padding: 20px;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.3s ease;
+    position: relative;
+    padding-left: 60px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.choice-btn:hover {
+    background-color: var(--info-color);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.choice-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+.choice-btn::before {
+    content: 'A';
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.choice-btn:nth-child(2)::before {
+    content: 'B';
+}
+
+/* Results */
+.result-container {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-top: 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.result-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+}
+
+.result-happy::before {
+    background: var(--accent-color);
+}
+
+.result-cold-war::before {
+    background: var(--warning-color);
+}
+
+.result-mother-in-law::before {
+    background: var(--info-color);
+}
+
+.result-couch::before {
+    background: var(--secondary-color);
+}
+
+.result-divorce::before {
+    background: var(--primary-color);
+}
+
+.result-title {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.result-happy .result-title {
+    color: var(--accent-color);
+}
+
+.result-cold-war .result-title {
+    color: var(--warning-color);
+}
+
+.result-mother-in-law .result-title {
+    color: var(--info-color);
+}
+
+.result-couch .result-title {
+    color: var(--secondary-color);
+}
+
+.result-divorce .result-title {
+    color: var(--primary-color);
+}
+
+.result-image {
+    margin: 20px 0;
+}
+
+.result-image img {
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.result-description {
+    font-size: 1.3rem;
+    margin-bottom: 30px;
+    padding: 25px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+}
+
+.score-summary {
+    margin: 30px 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+}
+
+.score-title {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: var(--dark-color);
+}
+
+.score-details {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.score-item {
+    text-align: center;
+}
+
+.score-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--secondary-color);
+}
+
+.score-label {
+    font-size: 1rem;
+    color: #777;
+}
+
+.restart-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .game-header h1 {
+        font-size: 2.2rem;
+    }
+    
+    .game-header h2 {
+        font-size: 1.2rem;
+    }
+    
+    .game-intro, .scenario-container, .result-container {
+        padding: 25px;
+    }
+    
+    .scenario-title {
+        font-size: 1.8rem;
+    }
+    
+    .scenario-description, .result-description {
+        font-size: 1.1rem;
+        padding: 15px;
+    }
+    
+    .choice-btn {
+        font-size: 1.1rem;
+        padding: 15px 15px 15px 50px;
+    }
+    
+    .result-title {
+        font-size: 2.2rem;
+    }
+    
+    .score-value {
+        font-size: 2rem;
+    }
+    
+    .restart-buttons {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .btn {
+        padding: 12px 25px;
+        font-size: 1.1rem;
+    }
+}

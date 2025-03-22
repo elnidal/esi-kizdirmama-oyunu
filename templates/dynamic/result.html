@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ ending.title }} - Eşi Kızdırmama Oyunu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/enhanced.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .result-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 20px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+        
+        .result-badge.success {
+            background-color: #2ecc71;
+        }
+        
+        .result-badge.warning {
+            background-color: #f39c12;
+        }
+        
+        .result-badge.danger {
+            background-color: #e74c3c;
+        }
+        
+        .score-item {
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .score-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .score-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, #3498db, #2ecc71);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+        
+        .score-item:hover::after {
+            transform: scaleX(1);
+        }
+        
+        .journey-summary {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+        }
+        
+        .journey-title {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .share-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .share-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .share-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .share-twitter {
+            background-color: #1DA1F2;
+        }
+        
+        .share-facebook {
+            background-color: #4267B2;
+        }
+        
+        .share-whatsapp {
+            background-color: #25D366;
+        }
+        
+        .share-telegram {
+            background-color: #0088cc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="game-header">
+            <h1>Eşi Kızdırmama Oyunu</h1>
+            <h2>Dinamik Versiyon - 20 Zorlu Senaryo</h2>
+        </div>
+        
+        <div class="result-container {{ ending.type }}">
+            <div class="result-badge 
+                {% if ending.type == 'result-happy' %}success
+                {% elif ending.type == 'result-cold-war' or ending.type == 'result-mother-in-law' %}warning
+                {% else %}danger{% endif %}">
+                Oyun Bitti!
+            </div>
+            
+            <h2 class="result-title">{{ ending.title }}</h2>
+            
+            <div class="result-image">
+                <img src="{{ url_for('static', filename='images/' + ending.image) }}" alt="{{ ending.title }}" onerror="this.src='https://via.placeholder.com/600x300?text={{ ending.title }}'">
+            </div>
+            
+            <div class="result-description">
+                <p>{{ ending.description }}</p>
+            </div>
+            
+            <div class="score-summary">
+                <h3 class="score-title"><i class="fas fa-chart-bar"></i> Performans Özeti</h3>
+                
+                <div class="score-details">
+                    <div class="score-item">
+                        <div class="score-value">{{ wrong_choices }}</div>
+                        <div class="score-label">Yanlış Seçim</div>
+                    </div>
+                    
+                    <div class="score-item">
+                        <div class="score-value">{{ total_scenarios - wrong_choices }}</div>
+                        <div class="score-label">Doğru Seçim</div>
+                    </div>
+                    
+                    <div class="score-item">
+                        <div class="score-value">%{{ success_rate }}</div>
+                        <div class="score-label">Başarı Oranı</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="journey-summary">
+                <h3 class="journey-title"><i class="fas fa-route"></i> Evlilik Yolculuğun</h3>
+                <p>20 zorlu senaryodan geçtin ve evliliğini test ettin. Her seçimin seni farklı bir yola götürdü ve sonunda burada buldun kendini.</p>
+                <p>Bir dahaki sefere farklı seçimler yaparak farklı senaryolar ve sonuçlar keşfedebilirsin!</p>
+            </div>
+            
+            <div class="share-section">
+                <h3><i class="fas fa-share-alt"></i> Sonucunu Paylaş</h3>
+                <div class="share-buttons">
+                    <a href="javascript:void(0)" class="share-button share-twitter" onclick="alert('Twitter paylaşım özelliği')">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="javascript:void(0)" class="share-button share-facebook" onclick="alert('Facebook paylaşım özelliği')">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="javascript:void(0)" class="share-button share-whatsapp" onclick="alert('WhatsApp paylaşım özelliği')">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="javascript:void(0)" class="share-button share-telegram" onclick="alert('Telegram paylaşım özelliği')">
+                        <i class="fab fa-telegram-plane"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="restart-buttons">
+                <a href="{{ url_for('start_game') }}" class="btn">
+                    <i class="fas fa-redo"></i> Tekrar Oyna
+                </a>
+                
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                    <i class="fas fa-home"></i> Ana Sayfa
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Add some simple animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const resultContainer = document.querySelector('.result-container');
+            resultContainer.style.opacity = '0';
+            resultContainer.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                resultContainer.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                resultContainer.style.opacity = '1';
+                resultContainer.style.transform = 'translateY(0)';
+            }, 300);
+            
+            // Add confetti effect for happy ending
+            if (document.querySelector('.result-happy')) {
+                createConfetti();
+            }
+        });
+        
+        // Simple confetti effect for happy ending
+        function createConfetti() {
+            const confettiContainer = document.createElement('div');
+            confettiContainer.style.position = 'fixed';
+            confettiContainer.style.top = '0';
+            confettiContainer.style.left = '0';
+            confettiContainer.style.width = '100%';
+            confettiContainer.style.height = '100%';
+            confettiContainer.style.pointerEvents = 'none';
+            confettiContainer.style.zIndex = '-1';
+            document.body.appendChild(confettiContainer);
+            
+            const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'absolute';
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = Math.random() * 10 + 5 + 'px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = -20 + 'px';
+                confetti.style.opacity = Math.random() + 0.5;
+                confetti.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
+                
+                confettiContainer.appendChild(confetti);
+                
+                const animationDuration = Math.random() * 3 + 2;
+                const animationDelay = Math.random() * 5;
+                
+                confetti.style.animation = `fall ${animationDuration}s ease-in ${animationDelay}s forwards`;
+            }
+            
+            // Add keyframes for falling animation
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes fall {
+                    0% {
+                        transform: translateY(0) rotate(0deg);
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: translateY(100vh) rotate(720deg);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    </script>
+</body>
+</html>

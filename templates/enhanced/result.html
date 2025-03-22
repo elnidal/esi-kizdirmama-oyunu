@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ ending.title }} - Karıyı Kızdırmama Oyunu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/enhanced.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="game-header">
+            <h1>Karıyı Kızdırmama Oyunu</h1>
+            <h2>Evlilikte Hayatta Kalma Rehberi</h2>
+        </div>
+        
+        <div class="result-container {{ ending.type }}">
+            <h2 class="result-title">{{ ending.title }}</h2>
+            
+            <div class="result-image">
+                <img src="{{ url_for('static', filename='images/' + ending.image) }}" alt="{{ ending.title }}" onerror="this.src='https://via.placeholder.com/600x300?text={{ ending.title }}'">
+            </div>
+            
+            <div class="result-description">
+                <p>{{ ending.description }}</p>
+            </div>
+            
+            <div class="score-summary">
+                <h3 class="score-title"><i class="fas fa-chart-bar"></i> Performans Özeti</h3>
+                
+                <div class="score-details">
+                    <div class="score-item">
+                        <div class="score-value">{{ wrong_choices }}</div>
+                        <div class="score-label">Yanlış Seçim</div>
+                    </div>
+                    
+                    <div class="score-item">
+                        <div class="score-value">{{ total_scenarios - wrong_choices }}</div>
+                        <div class="score-label">Doğru Seçim</div>
+                    </div>
+                    
+                    <div class="score-item">
+                        <div class="score-value">%{{ success_rate }}</div>
+                        <div class="score-label">Başarı Oranı</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="restart-buttons">
+                <a href="{{ url_for('start_game') }}" class="btn">
+                    <i class="fas fa-redo"></i> Tekrar Oyna
+                </a>
+                
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                    <i class="fas fa-home"></i> Ana Sayfa
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Add some simple animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const resultContainer = document.querySelector('.result-container');
+            resultContainer.style.opacity = '0';
+            resultContainer.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                resultContainer.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                resultContainer.style.opacity = '1';
+                resultContainer.style.transform = 'translateY(0)';
+            }, 300);
+            
+            // Add confetti effect for happy ending
+            if (document.querySelector('.result-happy')) {
+                createConfetti();
+            }
+        });
+        
+        // Simple confetti effect for happy ending
+        function createConfetti() {
+            const confettiContainer = document.createElement('div');
+            confettiContainer.style.position = 'fixed';
+            confettiContainer.style.top = '0';
+            confettiContainer.style.left = '0';
+            confettiContainer.style.width = '100%';
+            confettiContainer.style.height = '100%';
+            confettiContainer.style.pointerEvents = 'none';
+            confettiContainer.style.zIndex = '-1';
+            document.body.appendChild(confettiContainer);
+            
+            const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'absolute';
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = Math.random() * 10 + 5 + 'px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = -20 + 'px';
+                confetti.style.opacity = Math.random() + 0.5;
+                confetti.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
+                
+                confettiContainer.appendChild(confetti);
+                
+                const animationDuration = Math.random() * 3 + 2;
+                const animationDelay = Math.random() * 5;
+                
+                confetti.style.animation = `fall ${animationDuration}s ease-in ${animationDelay}s forwards`;
+            }
+            
+            // Add keyframes for falling animation
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes fall {
+                    0% {
+                        transform: translateY(0) rotate(0deg);
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: translateY(100vh) rotate(720deg);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    </script>
+</body>
+</html>
