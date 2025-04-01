@@ -2,10 +2,19 @@ services:
   - type: web
     name: esi-kizdirmama-oyunu
     env: python
+    plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn dynamic_game:app
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.9.0
+      - key: DATABASE_URL
+        fromDatabase:
+          name: esi-kizdirmama-db
+          property: connectionString
       - key: OPENAI_API_KEY
         sync: false
+      - key: PYTHON_VERSION
+        value: 3.10.0
+
+databases:
+  - name: esi-kizdirmama-db
+    plan: free
