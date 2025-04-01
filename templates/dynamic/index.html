@@ -7,54 +7,79 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/enhanced.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        .api-key-section {
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
             margin-top: 30px;
-            padding: 20px;
+        }
+        
+        .feature-card {
             background-color: rgba(255, 255, 255, 0.8);
             border-radius: 10px;
-            border-left: 5px solid #3498db;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         
-        .api-key-input {
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: #e74c3c;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .feature-description {
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .secondary-buttons {
             display: flex;
-            gap: 10px;
-            margin-top: 15px;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
         }
         
-        .api-key-input input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        
-        .api-key-input button {
-            padding: 10px 15px;
+        .secondary-btn {
+            padding: 10px 20px;
             background-color: #3498db;
             color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+            border-radius: 30px;
+            text-decoration: none;
             font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        .api-key-input button:hover {
+        .secondary-btn:hover {
             background-color: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
         }
         
-        .api-status {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #555;
+        .tutorial-btn {
+            background-color: #27ae60;
         }
         
-        .api-status.success {
-            color: #27ae60;
-        }
-        
-        .api-status.error {
-            color: #e74c3c;
+        .tutorial-btn:hover {
+            background-color: #219653;
         }
     </style>
 </head>
@@ -71,41 +96,67 @@
                    Bu sefer karşında tam 20 farklı senaryo var ve her seçimin seni farklı bir senaryoya götürecek!</p>
                 
                 <p><i class="fas fa-chess"></i> Seçimlerin bir sonraki senaryoyu ve eşinin tepkisini belirleyecek. 
-                   Çok fazla yanlış karar verirsen boşanabilirsin! Ama tüm 20 senaryodan sağ çıkarsan, 
-                   mutlu bir evliliğin devam edecek... en azından bir sonraki zorluğa kadar!</p>
-                
-                <p><i class="fas fa-laugh-squint"></i> Bu dinamik versiyonda, her oyun farklı olacak! 
-                   Senaryolar OpenAI API kullanılarak gerçek zamanlı olarak oluşturulacak, böylece her seferinde yeni zorluklarla karşılaşacaksın.</p>
-                
-                <p><i class="fas fa-exclamation-circle"></i> <strong>Dikkat:</strong> Bu oyun artık daha zor! Doğru cevaplar daha az belirgin ve her seçim seni farklı bir yola götürecek.</p>
+                   Çok fazla yanlış karar verirsen boşanabilirsin!</p>
             </div>
             
-            <div class="api-key-section">
-                <h3><i class="fas fa-key"></i> OpenAI API Anahtarı</h3>
-                <p>Dinamik senaryolar için OpenAI API anahtarınızı girin. Eğer bir API anahtarınız yoksa, oyun önceden tanımlanmış senaryoları kullanacaktır.</p>
-                
-                <div class="api-key-input">
-                    <input type="text" id="apiKey" placeholder="OpenAI API Anahtarınızı buraya girin">
-                    <button id="setApiKey">Kaydet</button>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="feature-title">Başarılar</div>
+                    <div class="feature-description">Çeşitli zorlukları tamamlayarak özel başarılar kazanın.</div>
                 </div>
                 
-                <div class="api-status" id="apiStatus">API anahtarı girilmedi. Oyun sınırlı senaryolarla çalışacak.</div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <div class="feature-title">Liderlik Tablosu</div>
+                    <div class="feature-description">En yüksek puanları elde edin ve yarışın.</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-laugh-beam"></i>
+                    </div>
+                    <div class="feature-title">Komik Senaryolar</div>
+                    <div class="feature-description">Her seferinde yeni ve eğlenceli senaryolar.</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="feature-title">Zorluk Seviyeleri</div>
+                    <div class="feature-description">Kolay, orta ve zor senaryolar ile mücadele edin.</div>
+                </div>
             </div>
             
             <div class="possible-endings">
                 <h3><i class="fas fa-award"></i> Olası Sonlar</h3>
                 <ul>
-                    <li><strong>Mutlu Son:</strong> 0-1 yanlış - Eşini hiç kızdırmadın, evliliğin mükemmel!</li>
-                    <li><strong>Soğuk Savaş:</strong> 2-3 yanlış - Eşin birkaç gün seninle konuşmuyor.</li>
-                    <li><strong>Kayınvalide Müdahalesi:</strong> 4-5 yanlış - Eşin annesini çağırdı, artık evde üçüncüsünüz.</li>
-                    <li><strong>Kanepe Ending:</strong> 6-7 yanlış - Yatak odasına giremiyorsun, kanepede uyuyorsun.</li>
-                    <li><strong>Anında Boşanma:</strong> 8+ yanlış - Eşin avukatını aradı bile!</li>
+                    <li><strong>Mutlu Son:</strong> 0-1 yanlış - Eşini hiç kızdırmadın, evliliğin mükemmel! 😊</li>
+                    <li><strong>Soğuk Savaş:</strong> 2-3 yanlış - Eşin birkaç gün seninle konuşmuyor. 🥶</li>
+                    <li><strong>Kayınvalide Müdahalesi:</strong> 4-5 yanlış - Eşin annesini çağırdı. 👵</li>
+                    <li><strong>Kanepe Ending:</strong> 6-7 yanlış - Kanepede uyuyorsun. 🛋️</li>
+                    <li><strong>Anında Boşanma:</strong> 8+ yanlış - Eşin avukatını aradı bile! 📝</li>
                 </ul>
             </div>
             
             <div class="start-button">
                 <a href="{{ url_for('start_game') }}" class="btn">
                     <i class="fas fa-play"></i> Oyuna Başla
+                </a>
+            </div>
+            
+            <div class="secondary-buttons">
+                <a href="{{ url_for('tutorial') }}" class="secondary-btn tutorial-btn">
+                    <i class="fas fa-graduation-cap"></i> Eğitim Modu
+                </a>
+                
+                <a href="{{ url_for('leaderboard') }}" class="secondary-btn">
+                    <i class="fas fa-crown"></i> Liderlik Tablosu
                 </a>
             </div>
         </div>
@@ -124,42 +175,17 @@
                 gameIntro.style.transform = 'translateY(0)';
             }, 300);
             
-            // API Key handling
-            const apiKeyInput = document.getElementById('apiKey');
-            const setApiKeyButton = document.getElementById('setApiKey');
-            const apiStatus = document.getElementById('apiStatus');
-            
-            setApiKeyButton.addEventListener('click', function() {
-                const apiKey = apiKeyInput.value.trim();
+            // Animate feature cards with staggered effect
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
                 
-                if (!apiKey) {
-                    apiStatus.textContent = 'Lütfen geçerli bir API anahtarı girin.';
-                    apiStatus.className = 'api-status error';
-                    return;
-                }
-                
-                // Send API key to server
-                fetch('/api/set_api_key', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ api_key: apiKey }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        apiStatus.textContent = 'API anahtarı başarıyla kaydedildi! Dinamik senaryolar kullanılacak.';
-                        apiStatus.className = 'api-status success';
-                    } else {
-                        apiStatus.textContent = data.message || 'API anahtarı kaydedilirken bir hata oluştu.';
-                        apiStatus.className = 'api-status error';
-                    }
-                })
-                .catch(error => {
-                    apiStatus.textContent = 'Bir hata oluştu: ' + error.message;
-                    apiStatus.className = 'api-status error';
-                });
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 300 + (index * 100));
             });
         });
     </script>

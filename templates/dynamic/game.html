@@ -7,14 +7,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/enhanced.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        .branching-paths {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: rgba(52, 152, 219, 0.1);
-            border-radius: 8px;
-            font-size: 0.9rem;
-        }
-        
         .scenario-difficulty {
             display: inline-block;
             padding: 5px 10px;
@@ -26,25 +18,29 @@
             vertical-align: middle;
         }
         
+        .scenario-difficulty.Kolay {
+            background-color: #2ecc71;
+        }
+        
+        .scenario-difficulty.Orta {
+            background-color: #f39c12;
+        }
+        
+        .scenario-difficulty.Zor {
+            background-color: #e74c3c;
+        }
+        
         .choice-btn {
             position: relative;
             overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            font-size: 1.1rem;
+            padding: 15px 25px;
         }
         
-        .choice-btn::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to right, rgba(255,255,255,0.1), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.5s ease;
-        }
-        
-        .choice-btn:hover::after {
-            transform: translateX(100%);
+        .choice-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
         
         .scenario-counter {
@@ -56,16 +52,6 @@
             padding: 5px 10px;
             border-radius: 20px;
             font-size: 0.9rem;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        .choice-btn:active {
-            animation: pulse 0.3s ease-in-out;
         }
         
         .progress-bar {
@@ -91,6 +77,43 @@
             font-size: 0.9rem;
             margin-top: 5px;
         }
+        
+        .scenario-image {
+            margin: 20px 0;
+            text-align: center;
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .scenario-image img {
+            width: 100%;
+            max-height: 350px;
+            object-fit: cover;
+            border-radius: 10px;
+            transition: transform 0.5s ease;
+        }
+        
+        .scenario-image:hover img {
+            transform: scale(1.03);
+        }
+        
+        .scenario-description {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin: 20px 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #e74c3c;
+        }
+        
+        .emoji-highlight {
+            font-size: 1.5rem;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
     </style>
 </head>
 <body>
@@ -102,13 +125,13 @@
         
         <div class="scenario-container">
             <div class="scenario-counter">
-                <i class="fas fa-hashtag"></i> {{ scenario_id }}/{{ total_scenarios }}
+                <i class="fas fa-hashtag"></i> {{ scenario_id }}/{{ total_scenarios }} 🎮
             </div>
             
             <div class="scenario-header">
                 <h2 class="scenario-title">
                     {{ scenario.title }}
-                    <span class="scenario-difficulty">Zor</span>
+                    <span class="scenario-difficulty {{ scenario.difficulty }}">{{ scenario.difficulty }}</span>
                 </h2>
                 
                 <div class="scenario-progress">
@@ -117,32 +140,28 @@
                             {{ progress }}%
                         </div>
                     </div>
-                    <div class="progress-text">İlerleme</div>
+                    <div class="progress-text">İlerleme 📊</div>
                 </div>
             </div>
             
-            <div class="scenario-description">
-                <p>{{ scenario.description }}</p>
-            </div>
-            
             <div class="scenario-image">
-                <img src="{{ url_for('static', filename='images/' + scenario.image) }}" alt="Senaryo Görseli" onerror="this.src='https://via.placeholder.com/600x300?text=Senaryo+{{ scenario_id }}'">
+                <img src="{{ scenario.image_url | default(url_for('static', filename='images/' + scenario.image)) }}" alt="{{ scenario.image_description }}" onerror="this.src='https://source.unsplash.com/600x400/?{{ scenario.image_description|default('couple,marriage,funny') }}'">
             </div>
             
-            <div class="branching-paths">
-                <p><i class="fas fa-random"></i> <strong>Dikkat:</strong> Seçiminiz bir sonraki senaryoyu belirleyecek. Her seçim farklı bir yola çıkar!</p>
+            <div class="scenario-description">
+                <span class="emoji-highlight">💭</span> {{ scenario.description }}
             </div>
             
             <div class="choices">
                 <form action="{{ url_for('make_choice') }}" method="post" id="choiceForm">
                     <input type="hidden" name="scenario_id" value="{{ scenario_id }}">
                     
-                    <button type="submit" name="choice" value="A" class="choice-btn">
-                        {{ scenario.choice_a }}
+                    <button type="submit" name="choice" value="A" class="choice-btn" data-choice="A">
+                        <span class="emoji-highlight">🅰️</span> {{ scenario.choice_a }}
                     </button>
                     
-                    <button type="submit" name="choice" value="B" class="choice-btn">
-                        {{ scenario.choice_b }}
+                    <button type="submit" name="choice" value="B" class="choice-btn" data-choice="B">
+                        <span class="emoji-highlight">🅱️</span> {{ scenario.choice_b }}
                     </button>
                 </form>
             </div>
@@ -152,6 +171,7 @@
     <script>
         // Add some simple animations
         document.addEventListener('DOMContentLoaded', function() {
+            // Animate scenario container entrance
             const scenarioContainer = document.querySelector('.scenario-container');
             scenarioContainer.style.opacity = '0';
             scenarioContainer.style.transform = 'translateY(20px)';
@@ -162,26 +182,17 @@
                 scenarioContainer.style.transform = 'translateY(0)';
             }, 300);
             
-            // Add hover effects to choice buttons
+            // Add hover effect to buttons
             const choiceButtons = document.querySelectorAll('.choice-btn');
             choiceButtons.forEach(button => {
-                button.addEventListener('mouseover', function() {
-                    this.style.transform = 'translateY(-3px)';
-                    this.style.boxShadow = '0 6px 10px rgba(0, 0, 0, 0.15)';
+                button.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = '0 10px 20px rgba(0,0,0,0.1)';
                 });
                 
-                button.addEventListener('mouseout', function() {
+                button.addEventListener('mouseleave', function() {
                     this.style.transform = 'translateY(0)';
-                    this.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-                });
-                
-                // Ensure form submission works
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const form = document.getElementById('choiceForm');
-                    this.value = this.getAttribute('value'); // Ensure value is set
-                    this.name = 'choice'; // Ensure name is set
-                    form.submit();
+                    this.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
                 });
             });
         });

@@ -233,7 +233,7 @@ def generate_scenario(scenario_id, previous_choice=None, previous_scenario=None)
     3. Two choices (A and B) where one is clearly better for maintaining marital harmony
     4. Indicate which choice is correct (A or B)
     5. Two different next scenario IDs depending on which choice is made
-    6. A brief image description that represents this scenario visually (keep it simple, like "Husband looking confused at wife's new haircut")
+    6. A brief image description that represents this scenario visually (include emojis and make it fun, like "😱 Husband looking confused at wife's new haircut 💇‍♀️")
     
     Format the response as a JSON object with the following structure:
     {{
@@ -245,7 +245,7 @@ def generate_scenario(scenario_id, previous_choice=None, previous_scenario=None)
         "next_scenario_a": [scenario ID if A is chosen],
         "next_scenario_b": [scenario ID if B is chosen],
         "difficulty": "{difficulty}",
-        "image_description": "[Brief description for image]"
+        "image_description": "[Brief description for image with emojis]"
     }}
     
     Make sure the next_scenario_a and next_scenario_b are numbers between 1 and {MAX_SCENARIOS}, and they should be different from the current scenario ID ({scenario_id}). Also ensure next scenarios never point to scenario 1.
@@ -274,8 +274,9 @@ def generate_scenario(scenario_id, previous_choice=None, previous_scenario=None)
             try:
                 scenario_json = json.loads(scenario_text)
                 # Use dynamic image URL with the image description
-                image_description = scenario_json.get('image_description', 'Turkish couple scenario')
+                image_description = scenario_json.get('image_description', 'Turkish couple scenario 😊')
                 encoded_desc = requests.utils.quote(image_description)
+                # Use both Unsplash for real photos and emojis in the description
                 scenario_json['image_url'] = f"https://source.unsplash.com/600x400/?{encoded_desc}"
                 scenario_json['image'] = f'scenario{scenario_id}.jpg' # Keep for compatibility
                 
@@ -307,29 +308,59 @@ def generate_fallback_scenario(scenario_id):
     else:
         difficulty = "Zor"
     
-    # Create a basic scenario structure
+    # Create a basic scenario structure with emojis for more fun
     image_descriptions = [
-        "couple arguing kitchen",
-        "husband surprised wife shopping",
-        "wife angry husband watching tv",
-        "couple discussing dinner table",
-        "husband apologizing flowers",
-        "wife showing new clothes",
-        "couple vacation planning",
-        "husband confused wife crying",
-        "couple celebrating anniversary",
-        "family dinner mother in law"
+        "😱 couple arguing kitchen 🍳",
+        "🛍️ husband surprised wife shopping 👗",
+        "😡 wife angry husband watching tv 📺",
+        "🍽️ couple discussing dinner table 🍷",
+        "💐 husband apologizing flowers 🌹",
+        "👗 wife showing new clothes 👠",
+        "🏖️ couple vacation planning ✈️",
+        "😕 husband confused wife crying 😭",
+        "🎂 couple celebrating anniversary 💝",
+        "👵 family dinner mother in law 🍴",
+        "🧹 husband forgot chores 🧼",
+        "💇‍♀️ wife new haircut reaction 😮",
+        "📱 husband texting too much 💬",
+        "🛌 couple bedtime argument 😴",
+        "🚗 backseat driving situation 🛣️",
+        "👨‍👩‍👧 parenting disagreement 👶",
+        "💰 unexpected purchase surprise 💳",
+        "🎮 gaming vs spending time together ⏰",
+        "👫 social plans with friends 🎉",
+        "🍔 cooking disaster in kitchen 🔥"
     ]
     
     image_description = random.choice(image_descriptions)
     encoded_desc = requests.utils.quote(image_description)
     
+    # Randomize choices for more variety
+    is_a_correct = random.choice([True, False])
+    correct_choice = "A" if is_a_correct else "B"
+    
+    choice_a = "Eşinin istediği şekilde davranırsın." if is_a_correct else "Kendi bildiğin gibi davranırsın."
+    choice_b = "Kendi bildiğin gibi davranırsın." if is_a_correct else "Eşinin istediği şekilde davranırsın."
+    
+    # Create interesting scenario titles with emojis
+    title_emojis = ["😊", "😱", "🤔", "😬", "🙄", "😍", "🤦‍♂️", "💪", "🤷‍♀️", "🏆"]
+    random_emoji = random.choice(title_emojis)
+    
+    # Make more interesting descriptions
+    descriptions = [
+        f"Eşinle {topic.lower()} konusunda bir anlaşmazlık yaşıyorsunuz. Ne yapacaksın?",
+        f"Eşin {topic.lower()} hakkında senin fikrini soruyor. Nasıl cevap vereceksin?",
+        f"{topic.capitalize()} konusunda eşinle aranızda bir gerginlik oluştu. Nasıl davranacaksın?",
+        f"Eşinin {topic.lower()} konusunda bir isteği var ama sen farklı düşünüyorsun. Ne diyeceksin?",
+        f"{topic.capitalize()} durumunda eşinle karşı karşıyasın. Tepkin ne olacak?"
+    ]
+    
     scenario = {
-        'title': f'Senaryo {scenario_id}: {topic}',
-        'description': f'Eşinle {topic.lower()} konusunda bir durum yaşıyorsunuz. Ne yapacaksın?',
-        'choice_a': 'Eşinin istediği şekilde davranırsın.',
-        'choice_b': 'Kendi bildiğin gibi davranırsın.',
-        'correct_choice': 'A',
+        'title': f'Senaryo {scenario_id}: {random_emoji} {topic}',
+        'description': random.choice(descriptions),
+        'choice_a': choice_a,
+        'choice_b': choice_b,
+        'correct_choice': correct_choice,
         'next_scenario_a': min(max(scenario_id + 1, 2), MAX_SCENARIOS),
         'next_scenario_b': min(max(scenario_id + 2, 2), MAX_SCENARIOS),
         'image': f'scenario{scenario_id}.jpg',
@@ -342,7 +373,14 @@ def generate_fallback_scenario(scenario_id):
 
 def get_scenario(scenario_id, previous_choice=None, previous_scenario=None):
     """Get a scenario by ID, generating it if needed"""
-    if scenario_id == 1:
+    # Ensure first scenario is also randomized instead of always using the base scenario
+    if scenario_id == 1 and random.random() > 0.3:  # 70% chance to get a random first scenario
+        new_scenario = generate_scenario(scenario_id, previous_choice, previous_scenario)
+        if 'scenarios' not in session:
+            session['scenarios'] = {}
+        session['scenarios']['1'] = new_scenario
+        return new_scenario
+    elif scenario_id == 1:
         return base_scenarios[0]
     
     # Check if we've already generated this scenario in the session
@@ -713,19 +751,6 @@ def leaderboard():
             })
     
     return render_template('dynamic/leaderboard.html', leaderboard=leaderboard)
-
-@app.route('/api/set_api_key', methods=['POST'])
-def set_api_key():
-    """Set the OpenAI API key"""
-    global OPENAI_API_KEY
-    data = request.get_json()
-    api_key = data.get('api_key')
-    
-    if api_key:
-        OPENAI_API_KEY = api_key
-        return jsonify({"status": "success", "message": "API key set successfully"})
-    else:
-        return jsonify({"status": "error", "message": "No API key provided"}), 400
 
 @app.route('/api/save_score', methods=['POST'])
 def save_score():
