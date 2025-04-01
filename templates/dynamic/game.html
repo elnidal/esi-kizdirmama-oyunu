@@ -334,7 +334,9 @@
             transition: left 0.5s ease-in-out;
         }
         
-        {{ shake_css|safe if shake_css }}
+        {% if shake_css %}
+            {{ shake_css|safe }}
+        {% endif %}
     </style>
 </head>
 <body>
@@ -367,17 +369,17 @@
                 
                 <!-- Anger Meter -->
                 <div class="anger-meter">
-                    <div class="anger-fill" id="angerFill" style="width: {{ (current_anger / max_anger * 100) if max_anger > 0 else 0 }}%;">
+                    <div class="anger-fill" id="angerFill" style="width: {% if max_anger > 0 %}{{ (current_anger / max_anger * 100) }}{% else %}0{% endif %}%;">
                         <div class="anger-text" id="angerText">
                             Öfke Seviyesi: {{ current_anger }}/{{ max_anger }}
                         </div>
-                        <span class="anger-icon" id="angerIcon" style="left: calc({{ (current_anger / max_anger * 100) if max_anger > 0 else 0 }}% - 15px);"></span>
+                        <span class="anger-icon" id="angerIcon" style="left: calc({% if max_anger > 0 %}{{ (current_anger / max_anger * 100) }}{% else %}0{% endif %}% - 15px);"></span>
                     </div>
                 </div>
                 
                 <div class="scenario-progress">
                     <div class="progress-bar">
-                        <div class="progress-fill" style="width:{{ progress }}%">
+                        <div class="progress-fill" style="width: {{ progress }}%;">
                             {{ progress }}%
                         </div>
                     </div>
@@ -485,134 +487,146 @@
             // Initialize Anger Meter Icon
             updateAngerIcon({{ current_anger }}, {{ max_anger }});
             
-            // Create flying emoji reactions
-            function createEmojiReaction(element) {
-                const emojis = element.dataset.emoji.split(',');
-                const emoji = emojis[Math.floor(Math.random() * emojis.length)];
-                
-                const reaction = document.createElement('div');
-                reaction.className = 'emoji-reaction';
-                reaction.textContent = emoji;
-                reaction.style.left = `${Math.random() * 80 + 10}%`;
-                reaction.style.top = `${element.offsetTop - 20}px`;
-                
-                document.body.appendChild(reaction);
-                
-                // Animate the emoji
-                setTimeout(() => {
-                    reaction.style.transition = 'all 1s ease-out';
-                    reaction.style.opacity = '1';
-                    reaction.style.transform = 'translateY(-20px)';
-                    
-                    setTimeout(() => {
-                        reaction.style.opacity = '0';
-                        reaction.style.transform = 'translateY(-40px)';
-                        
-                        setTimeout(() => {
-                            document.body.removeChild(reaction);
-                        }, 1000);
-                    }, 700);
-                }, 10);
-            }
-            
-            // Create hearts effect for image
-            function createHearts() {
-                for (let i = 0; i < 5; i++) {
-                    const heart = document.createElement('div');
-                    heart.innerHTML = '❤️';
-                    heart.style.position = 'absolute';
-                    heart.style.fontSize = `${Math.random() * 20 + 20}px`;
-                    heart.style.left = `${Math.random() * 80 + 10}%`;
-                    heart.style.top = `${scenarioImage.offsetTop + scenarioImage.offsetHeight / 2}px`;
-                    heart.style.opacity = '0';
-                    heart.style.pointerEvents = 'none';
-                    
-                    document.body.appendChild(heart);
-                    
-                    setTimeout(() => {
-                        heart.style.transition = 'all 1s ease-out';
-                        heart.style.opacity = '1';
-                        heart.style.transform = `translateY(-${Math.random() * 100 + 50}px)`;
-                        
-                        setTimeout(() => {
-                            heart.style.opacity = '0';
-                            
-                            setTimeout(() => {
-                                document.body.removeChild(heart);
-                            }, 1000);
-                        }, 700);
-                    }, i * 100);
-                }
-            }
+            // Prevent crashes when clicking on star elements
+            document.querySelectorAll('.fa-star').forEach(function(star) {
+                star.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log("Star clicked - operation prevented");
+                    return false;
+                });
+            });
         });
         
         // Function to handle choice submission
         function submitChoice(choice) {
             // Play click sound
-            const clickSound = document.getElementById('clickSound');
-            clickSound.volume = 0.4;
-            clickSound.play().catch(e => console.log("Audio play failed:", e));
+            document.getElementById('clickSound').play();
             
-            // Disable all buttons
-            const choiceButtons = document.querySelectorAll('.choice-btn');
-            choiceButtons.forEach(btn => {
+            // Disable both buttons to prevent double-clicking
+            const buttons = document.querySelectorAll('.choice-btn');
+            buttons.forEach(btn => {
                 btn.disabled = true;
+                btn.style.opacity = 0.7;
             });
             
-            // Highlight selected choice
-            const selectedButton = document.querySelector(`.choice-btn[data-choice="${choice}"]`);
-            selectedButton.classList.add('selected');
+            // Create emoji reaction for the clicked button
+            const clickedButton = document.querySelector(`.choice-btn[data-choice="${choice}"]`);
+            createEmojiReaction(clickedButton);
             
-            // Send choice to server
-            fetch('{{ url_for("submit_choice") }}', {
+            // Submit the choice via AJAX
+            fetch("{{ url_for('submit_choice') }}", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ 
-                    scenario_id: {{ scenario_id }}, 
-                    choice: choice 
-                }),
+                body: JSON.stringify({
+                    choice_id: choice,
+                    scenario_id: {{ scenario_id }}
+                })
             })
             .then(response => response.json())
             .then(data => {
-                // Visual feedback for correct/incorrect
+                // Handle response
                 if (data.correct) {
-                    selectedButton.classList.add('correct');
-                    const correctSound = document.getElementById('correctSound');
-                    correctSound.volume = 0.5;
-                    correctSound.play().catch(e => console.log("Audio play failed:", e));
-                    
-                    // Create fireworks effect
+                    // Play correct sound
+                    document.getElementById('correctSound').play();
+                    // Show fireworks
                     createFireworks(true);
+                    // Add hearts to image
+                    createHearts();
                 } else {
-                    selectedButton.classList.add('incorrect');
-                    const incorrectSound = document.getElementById('incorrectSound');
-                    incorrectSound.volume = 0.5;
-                    incorrectSound.play().catch(e => console.log("Audio play failed:", e));
-                    
-                    // Create subtle animation for incorrect
+                    // Play incorrect sound
+                    document.getElementById('incorrectSound').play();
+                    // Show angry emojis
+                    createFireworks(false);
+                    // Shake the body
                     document.body.classList.add('shake');
                     setTimeout(() => {
                         document.body.classList.remove('shake');
                     }, 500);
-                    
-                    // Update anger meter visually
-                    updateAngerMeter(data.anger_level, {{ max_anger }});
                 }
                 
-                // Wait a moment before redirecting
+                // Update anger meter if provided
+                if (data.anger_level !== undefined) {
+                    updateAngerMeter(data.anger_level, {{ max_anger }});
+                    updateAngerIcon(data.anger_level, {{ max_anger }});
+                }
+                
+                // Wait a bit before redirecting
                 setTimeout(() => {
                     window.location.href = data.next_url;
                 }, 1500);
             })
-            .catch((error) => {
+            .catch(error => {
                 console.error('Error:', error);
-                // Re-enable buttons if error
-                choiceButtons.forEach(btn => {
+                alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+                // Re-enable buttons if there's an error
+                buttons.forEach(btn => {
                     btn.disabled = false;
+                    btn.style.opacity = 1;
                 });
             });
+        }
+        
+        // Create flying emoji reactions
+        function createEmojiReaction(element) {
+            const emojis = element.dataset.emoji.split(',');
+            const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+            
+            const reaction = document.createElement('div');
+            reaction.className = 'emoji-reaction';
+            reaction.textContent = emoji;
+            reaction.style.left = `${Math.random() * 80 + 10}%`;
+            reaction.style.top = `${element.offsetTop - 20}px`;
+            
+            document.body.appendChild(reaction);
+            
+            // Animate the emoji
+            setTimeout(() => {
+                reaction.style.transition = 'all 1s ease-out';
+                reaction.style.opacity = '1';
+                reaction.style.transform = 'translateY(-20px)';
+                
+                setTimeout(() => {
+                    reaction.style.opacity = '0';
+                    reaction.style.transform = 'translateY(-40px)';
+                    
+                    setTimeout(() => {
+                        document.body.removeChild(reaction);
+                    }, 1000);
+                }, 700);
+            }, 10);
+        }
+        
+        // Create hearts effect for image
+        function createHearts() {
+            for (let i = 0; i < 5; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤️';
+                heart.style.position = 'absolute';
+                heart.style.fontSize = `${Math.random() * 20 + 20}px`;
+                heart.style.left = `${Math.random() * 80 + 10}%`;
+                heart.style.top = `${scenarioImage.offsetTop + scenarioImage.offsetHeight / 2}px`;
+                heart.style.opacity = '0';
+                heart.style.pointerEvents = 'none';
+                
+                document.body.appendChild(heart);
+                
+                setTimeout(() => {
+                    heart.style.transition = 'all 1s ease-out';
+                    heart.style.opacity = '1';
+                    heart.style.transform = `translateY(-${Math.random() * 100 + 50}px)`;
+                    
+                    setTimeout(() => {
+                        heart.style.opacity = '0';
+                        
+                        setTimeout(() => {
+                            document.body.removeChild(heart);
+                        }, 1000);
+                    }, 700);
+                }, i * 100);
+            }
         }
         
         // Create fireworks effect for correct answers

@@ -603,9 +603,15 @@ def start_game():
     session['games_played'] = session.get('games_played', 0) + 1
     session['visited_scenarios'] = ['1']  # Track which scenarios the player has visited
     
-    # Pre-generate scenarios if using OpenAI
-    if OPENAI_API_KEY:
-        generate_all_scenarios()
+    try:
+        # Pre-generate scenarios if using OpenAI
+        if OPENAI_API_KEY:
+            generate_all_scenarios()
+    except Exception as e:
+        print(f"Error during scenario generation: {e}")
+        # Don't crash, just continue with base scenario
+        session['scenarios'] = [base_scenarios[0]]
+        session['total_scenarios'] = 1
         
     # Use the route that handles dynamic scenarios
     return redirect(url_for('play_game'))
@@ -959,12 +965,12 @@ def play_game():
     
     # Get the current scenario
     current_scenario_id = session.get('current_scenario_id', 1)
-    scenarios = session.get('scenarios', [])
+    scenarios = session.get('scenarios', {})
     
     if current_scenario_id > len(scenarios):
         return redirect(url_for('show_result'))
     
-    scenario = scenarios[current_scenario_id - 1]
+    scenario = scenarios.get(str(current_scenario_id), {})
     total_scenarios = len(scenarios)
     progress = int((current_scenario_id - 1) / total_scenarios * 100)
     
@@ -1004,18 +1010,36 @@ def play_game():
 
 def generate_all_scenarios():
     """Pre-generate all scenarios and store them in the session"""
-    scenarios = [base_scenarios[0]] # Start with the base scenario
+    # Initialize scenarios dictionary if it doesn't exist
+    if 'scenarios' not in session:
+        session['scenarios'] = {}
+        
+    # Make sure the base scenario is included
+    session['scenarios']['1'] = base_scenarios[0]
+    
+    # Generate the rest of the scenarios
     for i in range(2, MAX_SCENARIOS + 1):
         # Try to provide context from a random previous scenario for better continuity
-        previous_scenario = random.choice(scenarios)
-        # Simulate a random choice for context generation
-        previous_choice = random.choice(['A', 'B'])
-        
-        new_scenario = generate_scenario(i, previous_choice, previous_scenario)
-        scenarios.append(new_scenario)
-        
-    session['scenarios'] = scenarios
-    session['total_scenarios'] = len(scenarios)
+        prev_keys = list(session['scenarios'].keys())
+        if prev_keys:
+            prev_id = random.choice(prev_keys)
+            previous_scenario = session['scenarios'][prev_id]
+            # Simulate a random choice for context generation
+            previous_choice = random.choice(['A', 'B'])
+        else:
+            previous_scenario = base_scenarios[0]
+            previous_choice = random.choice(['A', 'B'])
+            
+        try:
+            new_scenario = generate_scenario(i, previous_choice, previous_scenario)
+            session['scenarios'][str(i)] = new_scenario
+        except Exception as e:
+            print(f"Error generating scenario {i}: {e}")
+            # Create a simple fallback if generation fails
+            session['scenarios'][str(i)] = generate_fallback_scenario(i)
+    
+    session['total_scenarios'] = len(session['scenarios'])
+    session.modified = True
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5012))
