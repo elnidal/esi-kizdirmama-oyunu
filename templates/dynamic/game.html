@@ -7,15 +7,34 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/enhanced.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        body {
+            background-image: radial-gradient(circle at center, #ff9a9e 0%, #fad0c4 70%, #ffffff 100%);
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+        
         .scenario-difficulty {
             display: inline-block;
             padding: 5px 10px;
             background-color: #e74c3c;
             color: #fff;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             margin-left: 10px;
             vertical-align: middle;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
         
         .scenario-difficulty.Kolay {
@@ -33,94 +52,306 @@
         .choice-btn {
             position: relative;
             overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
             font-size: 1.1rem;
             padding: 15px 25px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
         }
         
         .choice-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        }
+        
+        .choice-btn:active {
+            transform: translateY(2px);
         }
         
         .scenario-counter {
             position: absolute;
             top: 20px;
             right: 20px;
-            background-color: rgba(0,0,0,0.7);
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: white;
-            padding: 5px 10px;
+            padding: 8px 15px;
             border-radius: 20px;
             font-size: 0.9rem;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
         }
         
         .progress-bar {
             width: 100%;
             height: 20px;
-            background-color: #ddd;
+            background-color: rgba(255,255,255,0.5);
             border-radius: 10px;
             margin-bottom: 5px;
             overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
         }
         
         .progress-fill {
             height: 100%;
-            background-color: #4CAF50;
+            background: linear-gradient(to right, #11998e, #38ef7d);
             border-radius: 10px;
             text-align: center;
             color: white;
             line-height: 20px;
             font-size: 12px;
+            font-weight: bold;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(56, 239, 125, 0.5);
         }
         
         .progress-text {
-            font-size: 0.9rem;
+            font-size: 1rem;
             margin-top: 5px;
+            font-weight: bold;
+            color: #2c3e50;
         }
         
         .scenario-image {
             margin: 20px 0;
             text-align: center;
             position: relative;
-            border-radius: 10px;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .scenario-image:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
         }
         
         .scenario-image img {
             width: 100%;
             max-height: 350px;
             object-fit: cover;
-            border-radius: 10px;
-            transition: transform 0.5s ease;
+            border-radius: 15px;
+            transition: transform 0.7s ease;
+            filter: brightness(0.95);
         }
         
         .scenario-image:hover img {
-            transform: scale(1.03);
+            transform: scale(1.05);
+            filter: brightness(1.05);
+        }
+        
+        .scenario-image::after {
+            content: '📸';
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: rgba(255,255,255,0.8);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 1.2rem;
         }
         
         .scenario-description {
             font-size: 1.2rem;
             line-height: 1.6;
-            margin: 20px 0;
+            margin: 25px 0;
             background-color: rgba(255, 255, 255, 0.8);
-            padding: 20px;
-            border-radius: 10px;
+            padding: 25px;
+            border-radius: 15px;
             border-left: 5px solid #e74c3c;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .scenario-description::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%);
+            transform: translateX(-100%);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            20% { transform: translateX(100%); }
+            100% { transform: translateX(100%); }
         }
         
         .emoji-highlight {
-            font-size: 1.5rem;
-            margin-right: 5px;
+            font-size: 1.8rem;
+            margin-right: 10px;
             vertical-align: middle;
         }
+        
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .game-header h1 {
+            font-size: 2.8rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            animation: colorChange 5s infinite alternate;
+        }
+        
+        @keyframes colorChange {
+            0% { color: #2c3e50; }
+            50% { color: #e74c3c; }
+            100% { color: #3498db; }
+        }
+        
+        .scenario-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .emoji-reaction {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .choices {
+            display: flex;
+            flex-direction: column;
+            margin-top: 30px;
+        }
+        
+        .home-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: rgba(0,0,0,0.6);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+        }
+        
+        .home-btn:hover {
+            background-color: #e74c3c;
+            transform: scale(1.1);
+        }
+        
+        .choice-btn.correct {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(46, 204, 113, 0.3);
+            border: 2px solid #27ae60;
+        }
+        
+        .choice-btn.incorrect {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(231, 76, 60, 0.3);
+            border: 2px solid #c0392b;
+        }
+        
+        .choice-btn.selected {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .firework {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 999;
+        }
+        
+        @keyframes explode {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(20); opacity: 0; }
+        }
+        
+        .anger-meter {
+            width: 100%;
+            height: 30px;
+            background-color: #e0e0e0;
+            border-radius: 15px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .anger-fill {
+            height: 100%;
+            background: linear-gradient(to right, #2ecc71, #f1c40f, #e74c3c);
+            border-radius: 15px;
+            width: 0%; /* Initial width */
+            transition: width 0.5s ease-in-out;
+            position: relative;
+        }
+        
+        .anger-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .anger-icon {
+            position: absolute;
+            top: -5px; /* Adjust as needed */
+            font-size: 1.8rem;
+            transition: left 0.5s ease-in-out;
+        }
+        
+        {{ shake_css|safe if shake_css }}
     </style>
 </head>
 <body>
+    <!-- Audio elements for sound effects -->
+    <audio id="correctSound" src="https://assets.mixkit.co/sfx/preview/mixkit-game-level-completed-2059.mp3" preload="auto"></audio>
+    <audio id="incorrectSound" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3" preload="auto"></audio>
+    <audio id="clickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-modern-technology-select-3125.mp3" preload="auto"></audio>
+    <audio id="hoverSound" src="https://assets.mixkit.co/sfx/preview/mixkit-interface-hint-2310.mp3" preload="auto"></audio>
+
+    <a href="{{ url_for('index') }}" class="home-btn">
+        <i class="fas fa-home"></i>
+    </a>
+    
     <div class="container">
         <div class="game-header">
-            <h1>Eşi Kızdırmama Oyunu</h1>
-            <h2>Dinamik Versiyon - 20 Zorlu Senaryo</h2>
+            <h1>Eşi Kızdırmama Oyunu 💑</h1>
+            <h2>Dinamik Versiyon - 10 Zorlu Senaryo 🔥</h2>
         </div>
         
         <div class="scenario-container">
@@ -134,21 +365,31 @@
                     <span class="scenario-difficulty {{ scenario.difficulty }}">{{ scenario.difficulty }}</span>
                 </h2>
                 
+                <!-- Anger Meter -->
+                <div class="anger-meter">
+                    <div class="anger-fill" id="angerFill" style="width: {{ (current_anger / max_anger * 100) if max_anger > 0 else 0 }}%;">
+                        <div class="anger-text" id="angerText">
+                            Öfke Seviyesi: {{ current_anger }}/{{ max_anger }}
+                        </div>
+                        <span class="anger-icon" id="angerIcon" style="left: calc({{ (current_anger / max_anger * 100) if max_anger > 0 else 0 }}% - 15px);"></span>
+                    </div>
+                </div>
+                
                 <div class="scenario-progress">
                     <div class="progress-bar">
                         <div class="progress-fill" style="width:{{ progress }}%">
                             {{ progress }}%
                         </div>
                     </div>
-                    <div class="progress-text">İlerleme 📊</div>
+                    <div class="progress-text">İlerleme 📊 </div>
                 </div>
             </div>
             
-            <div class="scenario-image">
+            <div class="scenario-image" id="scenarioImage">
                 <img src="{{ scenario.image_url | default(url_for('static', filename='images/' + scenario.image)) }}" alt="{{ scenario.image_description }}" onerror="this.src='https://source.unsplash.com/600x400/?{{ scenario.image_description|default('couple,marriage,funny') }}'">
             </div>
             
-            <div class="scenario-description">
+            <div class="scenario-description" id="scenarioText">
                 <span class="emoji-highlight">💭</span> {{ scenario.description }}
             </div>
             
@@ -156,11 +397,11 @@
                 <form action="{{ url_for('make_choice') }}" method="post" id="choiceForm">
                     <input type="hidden" name="scenario_id" value="{{ scenario_id }}">
                     
-                    <button type="submit" name="choice" value="A" class="choice-btn" data-choice="A">
+                    <button type="button" name="choice" value="A" class="choice-btn" data-choice="A" data-emoji="😊,👍,❤️,😇,🥰" onclick="submitChoice('A')">
                         <span class="emoji-highlight">🅰️</span> {{ scenario.choice_a }}
                     </button>
                     
-                    <button type="submit" name="choice" value="B" class="choice-btn" data-choice="B">
+                    <button type="button" name="choice" value="B" class="choice-btn" data-choice="B" data-emoji="😬,🤔,🙄,😱,😅" onclick="submitChoice('B')">
                         <span class="emoji-highlight">🅱️</span> {{ scenario.choice_b }}
                     </button>
                 </form>
@@ -182,20 +423,257 @@
                 scenarioContainer.style.transform = 'translateY(0)';
             }, 300);
             
-            // Add hover effect to buttons
+            // Add image click effect
+            const scenarioImage = document.getElementById('scenarioImage');
+            scenarioImage.addEventListener('click', function() {
+                this.classList.add('clicked');
+                setTimeout(() => {
+                    this.classList.remove('clicked');
+                }, 500);
+                
+                createHearts();
+            });
+            
+            // Add hover effect to buttons with emoji reactions
             const choiceButtons = document.querySelectorAll('.choice-btn');
+            const hoverSound = document.getElementById('hoverSound');
+            
             choiceButtons.forEach(button => {
                 button.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-5px)';
-                    this.style.boxShadow = '0 10px 20px rgba(0,0,0,0.1)';
+                    // Play hover sound at low volume
+                    hoverSound.volume = 0.2;
+                    hoverSound.currentTime = 0;
+                    hoverSound.play().catch(e => console.log("Audio play failed:", e));
+                    
+                    this.style.transform = 'translateY(-5px) scale(1.02)';
+                    this.style.boxShadow = '0 15px 25px rgba(0,0,0,0.1)';
+                    
+                    // Create emoji reaction
+                    createEmojiReaction(this);
                 });
                 
                 button.addEventListener('mouseleave', function() {
                     this.style.transform = 'translateY(0)';
                     this.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
                 });
+                
+                // Add click animation
+                button.addEventListener('click', function() {
+                    this.style.transform = 'translateY(2px)';
+                    setTimeout(() => {
+                        this.style.transform = 'translateY(-5px)';
+                    }, 150);
+                });
             });
+            
+            // Text typing effect for scenario description
+            const scenarioText = document.getElementById('scenarioText');
+            const text = scenarioText.innerHTML;
+            scenarioText.innerHTML = '';
+            
+            let i = 0;
+            function typeWriter() {
+                if (i < text.length) {
+                    scenarioText.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 10);
+                }
+            }
+            
+            typeWriter();
+            
+            // Initialize Anger Meter Icon
+            updateAngerIcon({{ current_anger }}, {{ max_anger }});
+            
+            // Create flying emoji reactions
+            function createEmojiReaction(element) {
+                const emojis = element.dataset.emoji.split(',');
+                const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+                
+                const reaction = document.createElement('div');
+                reaction.className = 'emoji-reaction';
+                reaction.textContent = emoji;
+                reaction.style.left = `${Math.random() * 80 + 10}%`;
+                reaction.style.top = `${element.offsetTop - 20}px`;
+                
+                document.body.appendChild(reaction);
+                
+                // Animate the emoji
+                setTimeout(() => {
+                    reaction.style.transition = 'all 1s ease-out';
+                    reaction.style.opacity = '1';
+                    reaction.style.transform = 'translateY(-20px)';
+                    
+                    setTimeout(() => {
+                        reaction.style.opacity = '0';
+                        reaction.style.transform = 'translateY(-40px)';
+                        
+                        setTimeout(() => {
+                            document.body.removeChild(reaction);
+                        }, 1000);
+                    }, 700);
+                }, 10);
+            }
+            
+            // Create hearts effect for image
+            function createHearts() {
+                for (let i = 0; i < 5; i++) {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = '❤️';
+                    heart.style.position = 'absolute';
+                    heart.style.fontSize = `${Math.random() * 20 + 20}px`;
+                    heart.style.left = `${Math.random() * 80 + 10}%`;
+                    heart.style.top = `${scenarioImage.offsetTop + scenarioImage.offsetHeight / 2}px`;
+                    heart.style.opacity = '0';
+                    heart.style.pointerEvents = 'none';
+                    
+                    document.body.appendChild(heart);
+                    
+                    setTimeout(() => {
+                        heart.style.transition = 'all 1s ease-out';
+                        heart.style.opacity = '1';
+                        heart.style.transform = `translateY(-${Math.random() * 100 + 50}px)`;
+                        
+                        setTimeout(() => {
+                            heart.style.opacity = '0';
+                            
+                            setTimeout(() => {
+                                document.body.removeChild(heart);
+                            }, 1000);
+                        }, 700);
+                    }, i * 100);
+                }
+            }
         });
+        
+        // Function to handle choice submission
+        function submitChoice(choice) {
+            // Play click sound
+            const clickSound = document.getElementById('clickSound');
+            clickSound.volume = 0.4;
+            clickSound.play().catch(e => console.log("Audio play failed:", e));
+            
+            // Disable all buttons
+            const choiceButtons = document.querySelectorAll('.choice-btn');
+            choiceButtons.forEach(btn => {
+                btn.disabled = true;
+            });
+            
+            // Highlight selected choice
+            const selectedButton = document.querySelector(`.choice-btn[data-choice="${choice}"]`);
+            selectedButton.classList.add('selected');
+            
+            // Send choice to server
+            fetch('{{ url_for("submit_choice") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    scenario_id: {{ scenario_id }}, 
+                    choice: choice 
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Visual feedback for correct/incorrect
+                if (data.correct) {
+                    selectedButton.classList.add('correct');
+                    const correctSound = document.getElementById('correctSound');
+                    correctSound.volume = 0.5;
+                    correctSound.play().catch(e => console.log("Audio play failed:", e));
+                    
+                    // Create fireworks effect
+                    createFireworks(true);
+                } else {
+                    selectedButton.classList.add('incorrect');
+                    const incorrectSound = document.getElementById('incorrectSound');
+                    incorrectSound.volume = 0.5;
+                    incorrectSound.play().catch(e => console.log("Audio play failed:", e));
+                    
+                    // Create subtle animation for incorrect
+                    document.body.classList.add('shake');
+                    setTimeout(() => {
+                        document.body.classList.remove('shake');
+                    }, 500);
+                    
+                    // Update anger meter visually
+                    updateAngerMeter(data.anger_level, {{ max_anger }});
+                }
+                
+                // Wait a moment before redirecting
+                setTimeout(() => {
+                    window.location.href = data.next_url;
+                }, 1500);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                // Re-enable buttons if error
+                choiceButtons.forEach(btn => {
+                    btn.disabled = false;
+                });
+            });
+        }
+        
+        // Create fireworks effect for correct answers
+        function createFireworks(isCorrect) {
+            if (!isCorrect) return;
+            
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.className = 'firework';
+                    firework.style.left = `${Math.random() * 100}vw`;
+                    firework.style.top = `${Math.random() * 100}vh`;
+                    
+                    // Random color
+                    const colors = ['#2ecc71', '#3498db', '#f1c40f', '#9b59b6', '#1abc9c'];
+                    firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    
+                    document.body.appendChild(firework);
+                    
+                    // Animate explosion
+                    firework.style.animation = `explode ${Math.random() * 0.5 + 0.5}s forwards`;
+                    
+                    // Remove after animation
+                    setTimeout(() => {
+                        document.body.removeChild(firework);
+                    }, 1000);
+                }, i * 200);
+            }
+        }
+        
+        // Function to update anger meter display
+        function updateAngerMeter(currentAnger, maxAnger) {
+            const angerFill = document.getElementById('angerFill');
+            const angerText = document.getElementById('angerText');
+            const angerPercentage = maxAnger > 0 ? (currentAnger / maxAnger * 100) : 0;
+            
+            angerFill.style.width = `${angerPercentage}%`;
+            angerText.textContent = `Öfke Seviyesi: ${currentAnger}/${maxAnger}`;
+            
+            // Update anger icon
+            updateAngerIcon(currentAnger, maxAnger);
+        }
+        
+        // Function to update anger icon based on level
+        function updateAngerIcon(currentAnger, maxAnger) {
+            const angerIcon = document.getElementById('angerIcon');
+            const angerPercentage = maxAnger > 0 ? (currentAnger / maxAnger * 100) : 0;
+            let icon = '😊'; // Default: Happy
+            
+            if (angerPercentage >= 80) { // Very angry
+                icon = '😡';
+            } else if (angerPercentage >= 50) { // Annoyed
+                icon = '😠';
+            } else if (angerPercentage >= 20) { // Slightly annoyed
+                icon = '😒';
+            }
+            
+            angerIcon.textContent = icon;
+            // Position icon slightly before the end of the fill bar
+            angerIcon.style.left = `calc(${angerPercentage}% - 15px)`; 
+        }
     </script>
 </body>
 </html>

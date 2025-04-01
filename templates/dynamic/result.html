@@ -114,6 +114,498 @@
         .share-telegram {
             background-color: #0088cc;
         }
+        
+        .total-score {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #e74c3c;
+            text-align: center;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .achievements-section {
+            margin-top: 30px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 5px solid #f39c12;
+        }
+        
+        .achievements-title {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .achievements-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .achievement-card {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 15px;
+            width: 200px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .achievement-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+        
+        .achievement-icon {
+            font-size: 2rem;
+            color: #f39c12;
+            margin-bottom: 10px;
+        }
+        
+        .achievement-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .achievement-desc {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        .leaderboard-link {
+            display: block;
+            margin-top: 15px;
+            text-align: center;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .leaderboard-link:hover {
+            text-decoration: underline;
+        }
+        
+        .save-score-form {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .player-name-input {
+            padding: 10px 15px;
+            border-radius: 25px;
+            border: 2px solid #3498db;
+            width: 250px;
+            font-size: 1rem;
+            outline: none;
+        }
+        
+        .player-name-input:focus {
+            border-color: #e74c3c;
+            box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
+        }
+        
+        .save-score-btn {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .save-score-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .journey-recap {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px dashed #ddd;
+        }
+        
+        .scenario-path {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .path-item {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 5px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .path-title {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .path-choice {
+            font-style: italic;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        
+        .path-choice.correct {
+            background-color: rgba(46, 204, 113, 0.1);
+            border-left: 3px solid #2ecc71;
+        }
+        
+        .path-choice.incorrect {
+            background-color: rgba(231, 76, 60, 0.1);
+            border-left: 3px solid #e74c3c;
+        }
+        
+        .path-arrow {
+            color: #bdc3c7;
+            margin: 5px 0;
+            font-size: 1.2em;
+        }
+        
+        .path-more {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        .path-more i {
+            margin-bottom: 5px;
+        }
+        
+        body {
+            background-image: radial-gradient(circle at center, #ff9a9e 0%, #fad0c4 70%, #ffffff 100%);
+        }
+        
+        .result-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .result-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+            color: {{ 'green' if 'result-happy' in ending.type else 'red' if 'result-divorce' in ending.type else '#f39c12' }};
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .result-image {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .result-image img {
+            max-width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+        
+        .result-image img:hover {
+            transform: scale(1.02);
+        }
+        
+        .result-description {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            border-left: 5px solid {{ 'green' if 'result-happy' in ending.type else 'red' if 'result-divorce' in ending.type else '#f39c12' }};
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3498db;
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            color: #7f8c8d;
+        }
+        
+        .achievements-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .achievement-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .achievement-card::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 40px;
+            height: 40px;
+            background-color: #3498db;
+            transform: rotate(45deg);
+        }
+        
+        .achievement-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .achievement-icon {
+            font-size: 3rem;
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+        
+        .achievement-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .achievement-description {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+            gap: 20px;
+        }
+        
+        .action-button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .action-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .play-again {
+            background-color: #2ecc71;
+        }
+        
+        .home {
+            background-color: #e74c3c;
+        }
+        
+        .leaderboard {
+            background-color: #f39c12;
+        }
+        
+        .history-section {
+            margin-top: 40px;
+        }
+        
+        .history-title {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .history-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .history-item {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .history-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .history-item-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .history-item-description {
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+        
+        .history-item-choice {
+            color: {{ 'green' if 'result-happy' in ending.type else '#e74c3c' }};
+            font-weight: bold;
+        }
+        
+        .history-item-difficulty {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: white;
+        }
+        
+        .history-item-difficulty.Kolay {
+            background-color: #2ecc71;
+        }
+        
+        .history-item-difficulty.Orta {
+            background-color: #f39c12;
+        }
+        
+        .history-item-difficulty.Zor {
+            background-color: #e74c3c;
+        }
+        
+        .save-score {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .save-score-title {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .save-score-form {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+            gap: 10px;
+        }
+        
+        .save-score-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .save-score-button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .save-score-button:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .emoji-rain {
+            position: fixed;
+            font-size: 2rem;
+            user-select: none;
+            pointer-events: none;
+            z-index: 9999;
+            animation: fall linear forwards;
+        }
+        
+        @keyframes fall {
+            0% { transform: translateY(-100vh) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+        
+        .floating-emoji {
+            position: absolute;
+            font-size: 2rem;
+            user-select: none;
+            pointer-events: none;
+            animation: float 3s ease-in-out infinite;
+            opacity: 0.7;
+        }
     </style>
 </head>
 <body>
@@ -134,11 +626,15 @@
             <h2 class="result-title">{{ ending.title }}</h2>
             
             <div class="result-image">
-                <img src="{{ url_for('static', filename='images/' + ending.image) }}" alt="{{ ending.title }}" onerror="this.src='https://via.placeholder.com/600x300?text={{ ending.title }}'">
+                <img src="{{ url_for('static', filename='images/' + ending.image) }}" alt="{{ ending.title }}" onerror="this.src='https://source.unsplash.com/600x400/?{{ ending.type }}'">
             </div>
             
             <div class="result-description">
                 <p>{{ ending.description }}</p>
+            </div>
+            
+            <div class="total-score">
+                {{ score }} Puan
             </div>
             
             <div class="score-summary">
@@ -159,13 +655,70 @@
                         <div class="score-value">%{{ success_rate }}</div>
                         <div class="score-label">Başarı Oranı</div>
                     </div>
+                    
+                    <div class="score-item">
+                        <div class="score-value">{{ time_taken }}</div>
+                        <div class="score-label">Saniye</div>
+                    </div>
                 </div>
+            </div>
+            
+            {% if achievements %}
+            <div class="achievements-section">
+                <h3 class="achievements-title"><i class="fas fa-trophy"></i> Kazanılan Başarılar</h3>
+                
+                <div class="achievements-container">
+                    {% for achievement in achievements %}
+                    <div class="achievement-card">
+                        <div class="achievement-icon">
+                            <i class="fas fa-{{ achievement.icon }}"></i>
+                        </div>
+                        <div class="achievement-title">{{ achievement.title }}</div>
+                        <div class="achievement-description">{{ achievement.description }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="save-score-form">
+                <h3><i class="fas fa-save"></i> Skorunu Kaydet</h3>
+                <form id="scoreForm">
+                    <input type="text" name="playerName" class="player-name-input" placeholder="Adınız" required>
+                    <input type="hidden" name="score" value="{{ score }}">
+                    <button type="submit" class="save-score-btn">Kaydet</button>
+                </form>
+                <a href="{{ url_for('leaderboard') }}" class="leaderboard-link">Liderlik Tablosunu Görüntüle</a>
             </div>
             
             <div class="journey-summary">
                 <h3 class="journey-title"><i class="fas fa-route"></i> Evlilik Yolculuğun</h3>
                 <p>20 zorlu senaryodan geçtin ve evliliğini test ettin. Her seçimin seni farklı bir yola götürdü ve sonunda burada buldun kendini.</p>
                 <p>Bir dahaki sefere farklı seçimler yaparak farklı senaryolar ve sonuçlar keşfedebilirsin!</p>
+                
+                <div class="journey-recap">
+                    <h4><i class="fas fa-map-signs"></i> Senin Yolculuğun</h4>
+                    <div class="scenario-path">
+                        {% for item in history[:3] %}
+                            <div class="path-item">
+                                <span class="path-title">{{ item.title }}</span>
+                                {% if item.choice %}
+                                    <span class="path-choice {% if item.was_correct %}correct{% else %}incorrect{% endif %}">
+                                        {{ item.choice_text }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                            {% if not loop.last %}<i class="fas fa-arrow-down path-arrow"></i>{% endif %}
+                        {% endfor %}
+                        
+                        {% if history|length > 3 %}
+                            <div class="path-more">
+                                <i class="fas fa-ellipsis-v"></i>
+                                <span>{{ history|length - 3 }} daha fazla senaryo</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
             
             <div class="share-section">
@@ -189,6 +742,10 @@
             <div class="restart-buttons">
                 <a href="{{ url_for('start_game') }}" class="btn">
                     <i class="fas fa-redo"></i> Tekrar Oyna
+                </a>
+                
+                <a href="{{ url_for('history') }}" class="btn btn-primary">
+                    <i class="fas fa-history"></i> Oyun Geçmişi
                 </a>
                 
                 <a href="{{ url_for('index') }}" class="btn btn-secondary">
@@ -215,6 +772,39 @@
             if (document.querySelector('.result-happy')) {
                 createConfetti();
             }
+            
+            // Handle form submission
+            const scoreForm = document.getElementById('scoreForm');
+            scoreForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const playerName = document.querySelector('.player-name-input').value;
+                const score = {{ score }};
+                
+                // Send score to server
+                fetch('/api/save_score', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: playerName,
+                        score: score
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert('Skorun başarıyla kaydedildi!');
+                        window.location.href = '{{ url_for("leaderboard") }}';
+                    } else {
+                        alert('Skor kaydedilirken bir hata oluştu.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Bir hata oluştu.');
+                });
+            });
         });
         
         // Simple confetti effect for happy ending
@@ -267,5 +857,112 @@
             document.head.appendChild(style);
         }
     </script>
+    
+    {% if 'result-happy' in ending.type %}
+    <!-- Add confetti effect for happy ending -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Celebration confetti for good ending
+            var duration = 5 * 1000;
+            var end = Date.now() + duration;
+
+            function frame() {
+                confetti({
+                    particleCount: 3,
+                    angle: 60,
+                    spread: 100,
+                    origin: { x: 0, y: 0.7 },
+                    colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']
+                });
+                confetti({
+                    particleCount: 3,
+                    angle: 120,
+                    spread: 100,
+                    origin: { x: 1, y: 0.7 },
+                    colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }
+            frame();
+        });
+    </script>
+    {% endif %}
+
+    {% if 'result-divorce' in ending.type %}
+    <!-- Add dramatic effect for divorce ending -->
+    <style>
+        .crack-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            background: url('https://media.giphy.com/media/xULW8MYvpNOfMXfDH2/giphy.gif') center/cover no-repeat;
+            opacity: 0;
+            animation: crack 1s forwards;
+        }
+        
+        @keyframes crack {
+            0% { opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0; }
+        }
+    </style>
+    <div class="crack-animation"></div>
+    {% endif %}
+
+    {% if 'result-happy' in ending.type %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Trigger emoji rain
+            const emojis = ['😊', '👍', '❤️', '🎉', '🥰', '🏆', '👨‍👩‍👧', '🎊', '💯', '💋'];
+            
+            function createEmojiRain() {
+                const emoji = document.createElement('div');
+                emoji.className = 'emoji-rain';
+                emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                emoji.style.left = `${Math.random() * 100}vw`;
+                emoji.style.animationDuration = `${Math.random() * 2 + 3}s`;
+                document.body.appendChild(emoji);
+                
+                setTimeout(() => {
+                    document.body.removeChild(emoji);
+                }, 5000);
+            }
+            
+            // Create initial emojis
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    createEmojiRain();
+                }, i * 300);
+            }
+            
+            // Continue creating emojis
+            setInterval(() => {
+                createEmojiRain();
+            }, 1000);
+            
+            // Create floating emojis around the content
+            const container = document.querySelector('.result-container');
+            const floatingEmojis = ['💗', '👨‍👩‍👧', '💑', '💏', '💍', '🏡', '💐'];
+            
+            for (let i = 0; i < 10; i++) {
+                const floatingEmoji = document.createElement('div');
+                floatingEmoji.className = 'floating-emoji';
+                floatingEmoji.textContent = floatingEmojis[Math.floor(Math.random() * floatingEmojis.length)];
+                floatingEmoji.style.left = `${Math.random() * 100}%`;
+                floatingEmoji.style.top = `${Math.random() * 100}%`;
+                floatingEmoji.style.animationDelay = `${Math.random()}s`;
+                container.appendChild(floatingEmoji);
+            }
+        });
+    </script>
+    {% endif %}
 </body>
 </html>

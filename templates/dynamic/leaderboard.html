@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liderlik Tablosu - Eşi Kızdırmama Oyunu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/enhanced.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .leaderboard-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .leaderboard-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .leaderboard-header h1 {
+            color: #e74c3c;
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .leaderboard-header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .leaderboard-table th {
+            background-color: #e74c3c;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+        
+        .leaderboard-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 1.1rem;
+        }
+        
+        .leaderboard-table tr:nth-child(even) {
+            background-color: rgba(236, 240, 241, 0.5);
+        }
+        
+        .leaderboard-table tr:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+        
+        .rank {
+            font-weight: bold;
+            text-align: center;
+            width: 60px;
+        }
+        
+        .rank-1, .rank-2, .rank-3 {
+            font-size: 1.3rem;
+        }
+        
+        .rank-1 {
+            color: #f1c40f;
+        }
+        
+        .rank-2 {
+            color: #bdc3c7;
+        }
+        
+        .rank-3 {
+            color: #d35400;
+        }
+        
+        .player-name {
+            font-weight: bold;
+        }
+        
+        .score {
+            font-weight: bold;
+            color: #2980b9;
+            text-align: right;
+        }
+        
+        .success-rate {
+            text-align: right;
+        }
+        
+        .time {
+            text-align: right;
+        }
+        
+        .date {
+            text-align: right;
+        }
+        
+        .back-button {
+            display: block;
+            width: 200px;
+            margin: 30px auto 0;
+            padding: 12px 20px;
+            background-color: #e74c3c;
+            color: white;
+            text-align: center;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background-color: #c0392b;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .leaderboard-container {
+            animation: fadeIn 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="leaderboard-container">
+            <div class="leaderboard-header">
+                <h1>Liderlik Tablosu</h1>
+                <p>En iyi Eşi Kızdırmama Oyunu oyuncuları</p>
+            </div>
+            
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th class="rank">Sıra</th>
+                        <th>Oyuncu</th>
+                        <th class="score">Puan</th>
+                        <th class="success-rate">Başarı Oranı</th>
+                        <th class="time">Süre</th>
+                        <th class="date">Tarih</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i, player in enumerate(leaderboard) %}
+                    <tr>
+                        <td class="rank rank-{{ i+1 }}">{{ i+1 }}</td>
+                        <td class="player-name">{{ player.name }}</td>
+                        <td class="score">{{ player.score }}</td>
+                        <td class="success-rate">%{{ player.success_rate }}</td>
+                        <td class="time">{{ player.time_taken }} sn</td>
+                        <td class="date">{{ player.timestamp.split(' ')[0] if player.timestamp else 'N/A' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <a href="{{ url_for('index') }}" class="back-button">
+                <i class="fas fa-home"></i> Ana Sayfa
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effect to table rows
+            const tableRows = document.querySelectorAll('.leaderboard-table tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(5px)';
+                    this.style.transition = 'transform 0.3s ease';
+                });
+                
+                row.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateX(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

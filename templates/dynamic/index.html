@@ -84,16 +84,27 @@
     </style>
 </head>
 <body>
+    <!-- Background music -->
+    <audio id="backgroundMusic" loop>
+        <source src="https://assets.mixkit.co/music/preview/mixkit-fun-and-quirky-13.mp3" type="audio/mpeg">
+    </audio>
+
     <div class="container">
         <div class="game-header">
             <h1>Eşi Kızdırmama Oyunu</h1>
-            <h2>Dinamik Versiyon - 20 Zorlu Senaryo</h2>
+            <h2>Dinamik Versiyon - 10 Zorlu Senaryo</h2>
+            
+            <div class="music-controls">
+                <button id="toggleMusic" class="music-btn">
+                    <i class="fas fa-volume-mute" id="musicIcon"></i> Müzik
+                </button>
+            </div>
         </div>
         
         <div class="game-intro">
             <div class="intro-text">
                 <p><i class="fas fa-exclamation-triangle"></i> <strong>Uyarı:</strong> Evli bir erkek olarak günlük hayatta eşini kızdırmadan yaşamaya çalışıyorsun. 
-                   Bu sefer karşında tam 20 farklı senaryo var ve her seçimin seni farklı bir senaryoya götürecek!</p>
+                   Bu sefer karşında 10 farklı senaryo var ve her seçimin seni farklı bir senaryoya götürecek!</p>
                 
                 <p><i class="fas fa-chess"></i> Seçimlerin bir sonraki senaryoyu ve eşinin tepkisini belirleyecek. 
                    Çok fazla yanlış karar verirsen boşanabilirsin!</p>
@@ -137,10 +148,10 @@
                 <h3><i class="fas fa-award"></i> Olası Sonlar</h3>
                 <ul>
                     <li><strong>Mutlu Son:</strong> 0-1 yanlış - Eşini hiç kızdırmadın, evliliğin mükemmel! 😊</li>
-                    <li><strong>Soğuk Savaş:</strong> 2-3 yanlış - Eşin birkaç gün seninle konuşmuyor. 🥶</li>
-                    <li><strong>Kayınvalide Müdahalesi:</strong> 4-5 yanlış - Eşin annesini çağırdı. 👵</li>
-                    <li><strong>Kanepe Ending:</strong> 6-7 yanlış - Kanepede uyuyorsun. 🛋️</li>
-                    <li><strong>Anında Boşanma:</strong> 8+ yanlış - Eşin avukatını aradı bile! 📝</li>
+                    <li><strong>Soğuk Savaş:</strong> 2 yanlış - Eşin birkaç gün seninle konuşmuyor. 🥶</li>
+                    <li><strong>Kayınvalide Müdahalesi:</strong> 3 yanlış - Eşin annesini çağırdı. 👵</li>
+                    <li><strong>Kanepe Ending:</strong> 4 yanlış - Kanepede uyuyorsun. 🛋️</li>
+                    <li><strong>Anında Boşanma:</strong> 5+ yanlış - Eşin avukatını aradı bile! 📝</li>
                 </ul>
             </div>
             
@@ -163,30 +174,125 @@
     </div>
     
     <script>
-        // Add some simple animations
         document.addEventListener('DOMContentLoaded', function() {
-            const gameIntro = document.querySelector('.game-intro');
-            gameIntro.style.opacity = '0';
-            gameIntro.style.transform = 'translateY(20px)';
+            const musicBtn = document.getElementById('toggleMusic');
+            const musicIcon = document.getElementById('musicIcon');
+            const backgroundMusic = document.getElementById('backgroundMusic');
             
-            setTimeout(() => {
-                gameIntro.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-                gameIntro.style.opacity = '1';
-                gameIntro.style.transform = 'translateY(0)';
-            }, 300);
+            // Set initial volume
+            backgroundMusic.volume = 0.3;
             
-            // Animate feature cards with staggered effect
-            const featureCards = document.querySelectorAll('.feature-card');
-            featureCards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
+            // Check if music preference is stored
+            const musicEnabled = localStorage.getItem('backgroundMusicEnabled') === 'true';
+            
+            // Update button state
+            if (musicEnabled) {
+                musicIcon.classList.remove('fa-volume-mute');
+                musicIcon.classList.add('fa-volume-up');
+                // Try to play music (may be blocked by browser without user interaction)
+                backgroundMusic.play().catch(e => console.log('Auto-play prevented:', e));
+            }
+            
+            // Toggle music on button click
+            musicBtn.addEventListener('click', function() {
+                if (backgroundMusic.paused) {
+                    backgroundMusic.play();
+                    musicIcon.classList.remove('fa-volume-mute');
+                    musicIcon.classList.add('fa-volume-up');
+                    localStorage.setItem('backgroundMusicEnabled', 'true');
+                    
+                    // Add pulse animation to the button
+                    musicBtn.classList.add('music-active');
+                } else {
+                    backgroundMusic.pause();
+                    musicIcon.classList.remove('fa-volume-up');
+                    musicIcon.classList.add('fa-volume-mute');
+                    localStorage.setItem('backgroundMusicEnabled', 'false');
+                    
+                    // Remove pulse animation
+                    musicBtn.classList.remove('music-active');
+                }
+            });
+            
+            // Add some animations to the UI elements
+            const actionButtons = document.querySelectorAll('.action-button');
+            actionButtons.forEach((button, index) => {
+                button.style.opacity = '0';
+                button.style.transform = 'translateY(20px)';
                 
                 setTimeout(() => {
-                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, 300 + (index * 100));
+                    button.style.transition = 'all 0.5s ease';
+                    button.style.opacity = '1';
+                    button.style.transform = 'translateY(0)';
+                }, 100 + index * 100);
             });
+            
+            // Add floating hearts animation
+            function createFloatingHeart() {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤️';
+                heart.style.position = 'fixed';
+                heart.style.fontSize = `${Math.random() * 20 + 10}px`;
+                heart.style.left = `${Math.random() * 100}vw`;
+                heart.style.bottom = '-20px';
+                heart.style.opacity = '0.7';
+                heart.style.zIndex = '-1';
+                heart.style.pointerEvents = 'none';
+                heart.style.animation = `float ${Math.random() * 5 + 5}s linear forwards`;
+                
+                document.body.appendChild(heart);
+                
+                setTimeout(() => {
+                    document.body.removeChild(heart);
+                }, 10000);
+            }
+            
+            // Create hearts periodically
+            setInterval(createFloatingHeart, 2000);
+            
+            // Add keyframes for floating animation
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes float {
+                    0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+                    10% { opacity: 0.7; }
+                    100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+                }
+                
+                .music-btn {
+                    padding: 10px 15px;
+                    background-color: rgba(255, 255, 255, 0.8);
+                    border: none;
+                    border-radius: 20px;
+                    margin-bottom: 20px;
+                    cursor: pointer;
+                    transition: all 0.3s;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    font-weight: bold;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                }
+                
+                .music-btn:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+                }
+                
+                .music-active {
+                    background-color: #3498db;
+                    color: white;
+                    animation: pulse 2s infinite;
+                }
+                
+                @keyframes pulse {
+                    0% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.7); }
+                    70% { box-shadow: 0 0 0 10px rgba(52, 152, 219, 0); }
+                    100% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0); }
+                }
+            `;
+            
+            document.head.appendChild(style);
         });
     </script>
 </body>

@@ -1,10 +1,21 @@
+# Virtual environment
+venv/
+env/
+ENV/
+
+# Environment variables
+.env
+
+# Local database
+*.db
+*.sqlite
+
 # Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-env/
 build/
 develop-eggs/
 dist/
@@ -16,20 +27,21 @@ lib64/
 parts/
 sdist/
 var/
+wheels/
 *.egg-info/
 .installed.cfg
 *.egg
 
-# Environment variables
-.env
+# Logs
+*.log
+
+# OS specific files
+.DS_Store
+Thumbs.db
 
 # Flask
 instance/
 .webassets-cache
-
-# Virtual Environment
-venv/
-ENV/
 
 # IDE
 .idea/

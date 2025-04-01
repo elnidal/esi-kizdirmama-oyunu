@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oyun Geçmişi - Eşi Kızdırmama Oyunu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/enhanced.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .history-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .history-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .history-header h1 {
+            color: #e74c3c;
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .history-header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        .history-summary {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .summary-item {
+            text-align: center;
+        }
+        
+        .summary-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        
+        .summary-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        .history-timeline {
+            position: relative;
+            padding-left: 50px;
+            margin-top: 40px;
+        }
+        
+        .timeline-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 20px;
+            width: 4px;
+            background-color: #e74c3c;
+            border-radius: 2px;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .timeline-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -46px;
+            top: 20px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 4px solid #e74c3c;
+            z-index: 1;
+        }
+        
+        .timeline-item.correct::before {
+            border-color: #2ecc71;
+        }
+        
+        .timeline-item.incorrect::before {
+            border-color: #e74c3c;
+        }
+        
+        .timeline-item.start::before {
+            background-color: #3498db;
+            border-color: #3498db;
+        }
+        
+        .timeline-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .timeline-description {
+            margin-bottom: 15px;
+            color: #7f8c8d;
+        }
+        
+        .timeline-choice {
+            padding: 10px 15px;
+            background-color: #f2f2f2;
+            border-radius: 8px;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-choice.correct {
+            border-left: 4px solid #2ecc71;
+        }
+        
+        .timeline-choice.incorrect {
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .scenario-difficulty {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #e74c3c;
+            color: #fff;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        
+        .scenario-difficulty.Kolay {
+            background-color: #2ecc71;
+        }
+        
+        .scenario-difficulty.Orta {
+            background-color: #f39c12;
+        }
+        
+        .scenario-difficulty.Zor {
+            background-color: #e74c3c;
+        }
+        
+        .back-button {
+            display: block;
+            width: 200px;
+            margin: 30px auto 0;
+            padding: 12px 20px;
+            background-color: #e74c3c;
+            color: white;
+            text-align: center;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background-color: #c0392b;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="history-container">
+            <div class="history-header">
+                <h1>Oyun Geçmişiniz</h1>
+                <p>Tüm seçimlerinizin ve senaryoların kronolojik özeti</p>
+            </div>
+            
+            <div class="history-summary">
+                <div class="summary-item">
+                    <div class="summary-value">{{ total_scenarios }}</div>
+                    <div class="summary-label">Toplam Senaryo</div>
+                </div>
+                
+                <div class="summary-item">
+                    <div class="summary-value">{{ total_scenarios - wrong_choices }}</div>
+                    <div class="summary-label">Doğru Seçim</div>
+                </div>
+                
+                <div class="summary-item">
+                    <div class="summary-value">{{ wrong_choices }}</div>
+                    <div class="summary-label">Yanlış Seçim</div>
+                </div>
+                
+                <div class="summary-item">
+                    <div class="summary-value">%{{ success_rate }}</div>
+                    <div class="summary-label">Başarı Oranı</div>
+                </div>
+            </div>
+            
+            <div class="history-timeline">
+                <div class="timeline-line"></div>
+                
+                {% for item in history %}
+                    <div class="timeline-item {% if loop.first %}start{% elif item.was_correct %}correct{% elif item.was_correct == False %}incorrect{% endif %}">
+                        <div class="timeline-title">
+                            {{ item.title }}
+                            <span class="scenario-difficulty {{ item.difficulty }}">{{ item.difficulty }}</span>
+                        </div>
+                        
+                        <div class="timeline-description">
+                            {{ item.description }}
+                        </div>
+                        
+                        {% if item.choice %}
+                            <div class="timeline-choice {% if item.was_correct %}correct{% else %}incorrect{% endif %}">
+                                <strong>Seçiminiz ({{ item.choice }}):</strong> {{ item.choice_text }}
+                                {% if item.was_correct %}
+                                    <i class="fas fa-check-circle" style="color: #2ecc71; margin-left: 5px;"></i>
+                                {% else %}
+                                    <i class="fas fa-times-circle" style="color: #e74c3c; margin-left: 5px;"></i>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <div class="button-group">
+                <a href="{{ url_for('index') }}" class="back-button">
+                    <i class="fas fa-home"></i> Ana Sayfa
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate timeline items with staggered effect
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            timelineItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(-20px)';
+                
+                setTimeout(() => {
+                    item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateX(0)';
+                }, 200 + (index * 100));
+            });
+        });
+    </script>
+</body>
+</html> 

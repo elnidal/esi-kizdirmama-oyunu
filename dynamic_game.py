@@ -80,12 +80,12 @@ def init_db():
 init_db()
 
 # Game configuration
-MAX_SCENARIOS = 20  # Increased to 20 questions
+MAX_SCENARIOS = 10  # Changed from 20 to 10 questions
 WRONG_CHOICES_THRESHOLD = {
-    "divorce": 8,     # 8+ wrong choices leads to divorce
-    "couch": 6,       # 6-7 wrong choices leads to couch
-    "mother_in_law": 4, # 4-5 wrong choices leads to mother-in-law
-    "cold_war": 2,    # 2-3 wrong choices leads to cold war
+    "divorce": 5,     # 5+ wrong choices leads to divorce (adjusted from 8)
+    "couch": 4,       # 4 wrong choices leads to couch (adjusted from 6-7)
+    "mother_in_law": 3, # 3 wrong choices leads to mother-in-law (adjusted from 4-5)
+    "cold_war": 2,    # 2 wrong choices leads to cold war
     "happy": 0        # 0-1 wrong choices leads to happy ending
 }
 
@@ -217,6 +217,17 @@ def generate_scenario(scenario_id, previous_choice=None, previous_scenario=None)
     else:
         difficulty = "Zor"
     
+    # Randomize humor level for more variety
+    humor_levels = [
+        "witty and clever with wordplay",
+        "over-the-top exaggerated and comedic",
+        "dry humor with a touch of sarcasm",
+        "absurdist with unexpected twists",
+        "relatable everyday marriage situations with a funny twist"
+    ]
+    
+    humor_level = random.choice(humor_levels)
+    
     # Prepare the prompt for OpenAI
     prompt = f"""
     Create a humorous marriage scenario for a Turkish couple game called "Eşi Kızdırmama Oyunu" (Don't Make Your Wife Angry).
@@ -224,12 +235,13 @@ def generate_scenario(scenario_id, previous_choice=None, previous_scenario=None)
     Topic: {topic}
     Scenario ID: {scenario_id}
     Difficulty: {difficulty}
+    Humor style: {humor_level}
     {context}
     
     The scenario should be funny, slightly exaggerated, and based on common relationship dynamics in Turkish culture.
     It should include:
-    1. A title starting with "Senaryo {scenario_id}: "
-    2. A description of the situation (1-2 sentences)
+    1. A title starting with "Senaryo {scenario_id}: " (make it catchy and humorous)
+    2. A description of the situation (1-2 sentences, make it very funny and relatable)
     3. Two choices (A and B) where one is clearly better for maintaining marital harmony
     4. Indicate which choice is correct (A or B)
     5. Two different next scenario IDs depending on which choice is made
@@ -260,7 +272,7 @@ def generate_scenario(scenario_id, previous_choice=None, previous_scenario=None)
         data = {
             "model": "gpt-4",  # Upgraded from gpt-3.5-turbo to gpt-4 for better quality
             "messages": [{"role": "user", "content": prompt}],
-            "temperature": 0.7,
+            "temperature": 0.8,  # Increased slightly for more creative responses
             "max_tokens": 600
         }
         
@@ -339,12 +351,49 @@ def generate_fallback_scenario(scenario_id):
     is_a_correct = random.choice([True, False])
     correct_choice = "A" if is_a_correct else "B"
     
-    choice_a = "Eşinin istediği şekilde davranırsın." if is_a_correct else "Kendi bildiğin gibi davranırsın."
-    choice_b = "Kendi bildiğin gibi davranırsın." if is_a_correct else "Eşinin istediği şekilde davranırsın."
+    # More fun alternatives for choices
+    good_choices = [
+        "Eşinin istediği şekilde davranırsın.",
+        "Diplomatik davranıp eşini desteklersin.",
+        "Anlayışlı bir şekilde eşinin yanında olursun.",
+        "Sabırla ve sevgiyle yaklaşırsın.",
+        "Bir çiçek alıp gönlünü alırsın.",
+        "Eşini haklı bulup özür dilersin.",
+        "Eşinin istediğini yaparsın.",
+        "Onu dinler ve isteklerini anlamaya çalışırsın."
+    ]
+    
+    bad_choices = [
+        "Kendi bildiğin gibi davranırsın.",
+        "Eşini görmezden gelip istediğini yaparsın.",
+        "İnatla kendi fikrinde ısrar edersin.",
+        "Homurdanarak kabul edersin.",
+        "Gözlerini devirerek cevap verirsin.",
+        "Espri yaparak durumu geçiştirmeye çalışırsın.",
+        "Ona mantık çerçevesinde açıklamaya çalışırsın.",
+        "Konuyu değiştirmeye çalışırsın."
+    ]
+    
+    choice_a = random.choice(good_choices) if is_a_correct else random.choice(bad_choices)
+    choice_b = random.choice(bad_choices) if is_a_correct else random.choice(good_choices)
     
     # Create interesting scenario titles with emojis
-    title_emojis = ["😊", "😱", "🤔", "😬", "🙄", "😍", "🤦‍♂️", "💪", "🤷‍♀️", "🏆"]
+    title_emojis = ["😊", "😱", "🤔", "😬", "🙄", "😍", "🤦‍♂️", "💪", "🤷‍♀️", "🏆", "🔥", "💯", "🎭", "🎮", "🚨"]
     random_emoji = random.choice(title_emojis)
+    
+    # Funny title prefixes
+    title_prefixes = [
+        "Büyük Kriz:",
+        "Tehlikeli Sularda:",
+        "Evlilik İmtihanı:",
+        "Kaçış Yok:",
+        "Diplomatik Kriz:",
+        "Sürpriz Saldırı:",
+        "Sabır Testi:",
+        "Savaş Alanı:",
+        "Beklenmedik Durum:",
+        "Evliliğin Sınavı:"
+    ]
     
     # Make more interesting descriptions
     descriptions = [
@@ -355,9 +404,27 @@ def generate_fallback_scenario(scenario_id):
         f"{topic.capitalize()} durumunda eşinle karşı karşıyasın. Tepkin ne olacak?"
     ]
     
+    # Add humor phrases to descriptions
+    humor_phrases = [
+        " Aman dikkat, bir yanlış adım ve kanepe seni bekliyor!",
+        " Yanlış cevap verirsen kayınvalide devreye girebilir!",
+        " Hatırla, her 'tamam aşkım' bir gün fazladan huzur demek.",
+        " Evliliğin altın kuralı: Eşin her zaman haklıdır, özellikle haksız olduğunda!",
+        " Bu senaryo gerçek evliliklerde test edilmiştir ve boşanmalar yaşanmıştır!",
+        " İyi düşün, bu sorunun cevabı evliliğinin kaderini belirleyebilir!",
+        " Dikkat et, her yanlış cevap bir gece kanepede uyumak demek.",
+        " Eşinin gözlerindeki o bakışı görüyor musun? Tehlike çanları çalıyor!",
+        " Şu an bir mayın tarlasında yürüyorsun, adımını dikkatli at!",
+        " Bu soruyu eşlerin %87'si yanlış cevaplamış ve hala pişmanlar!"
+    ]
+    
+    random_description = random.choice(descriptions)
+    random_humor = random.choice(humor_phrases)
+    enhanced_description = random_description + random_humor
+    
     scenario = {
-        'title': f'Senaryo {scenario_id}: {random_emoji} {topic}',
-        'description': random.choice(descriptions),
+        'title': f'Senaryo {scenario_id}: {random_emoji} {random.choice(title_prefixes)} {topic}',
+        'description': enhanced_description,
         'choice_a': choice_a,
         'choice_b': choice_b,
         'correct_choice': correct_choice,
@@ -528,6 +595,7 @@ def start_game():
     session.permanent = True
     session['current_scenario'] = '1'
     session['wrong_choices'] = 0
+    session['anger_level'] = 0  # Initialize anger level
     session['choices_made'] = []
     session['scenarios'] = {}
     session['scenarios']['1'] = base_scenarios[0]  # Add the first scenario
@@ -535,7 +603,12 @@ def start_game():
     session['games_played'] = session.get('games_played', 0) + 1
     session['visited_scenarios'] = ['1']  # Track which scenarios the player has visited
     
-    return redirect(url_for('show_scenario', scenario_id=1))
+    # Pre-generate scenarios if using OpenAI
+    if OPENAI_API_KEY:
+        generate_all_scenarios()
+        
+    # Use the route that handles dynamic scenarios
+    return redirect(url_for('play_game'))
 
 @app.route('/scenario/<int:scenario_id>')
 def show_scenario(scenario_id):
@@ -576,93 +649,73 @@ def show_scenario(scenario_id):
                           total_scenarios=MAX_SCENARIOS,
                           progress=int((int(scenario_id)-1) / MAX_SCENARIOS * 100))
 
-@app.route('/make_choice', methods=['POST'])
-def make_choice():
-    # Make sure session is permanent
-    session.permanent = True
+@app.route('/submit_choice', methods=['POST'])
+def submit_choice():
+    data = request.get_json() if request.is_json else request.form
+    choice_id = data.get('choice_id') or data.get('choice')
+    scenario_id = data.get('scenario_id', session.get('current_scenario_id'))
     
-    choice = request.form.get('choice')
-    scenario_id = int(request.form.get('scenario_id'))
+    if not choice_id or not scenario_id:
+        if request.is_json:
+            return jsonify({'status': 'error', 'message': 'Missing choice or scenario ID'})
+        else:
+            flash('Bir seçim yapmalısınız!', 'error')
+            return redirect(url_for('play_game'))
     
-    # Initialize session variables if they don't exist
-    if 'choices_made' not in session:
-        session['choices_made'] = []
+    # Convert to string for comparison if needed
+    choice_id = str(choice_id)
     
-    if 'wrong_choices' not in session:
-        session['wrong_choices'] = 0
+    # Get the current scenario
+    scenario = session.get('scenarios', [])[int(scenario_id) - 1]
     
-    if 'current_scenario' not in session:
-        session['current_scenario'] = str(scenario_id)
+    # Get the correct choice
+    correct_choice = scenario.get('correct_choice', 'A')
     
-    if 'visited_scenarios' not in session:
-        session['visited_scenarios'] = [str(scenario_id)]
+    # Check if the choice is correct
+    is_correct = choice_id == correct_choice
     
-    # Initialize scenarios in session if it doesn't exist
-    if 'scenarios' not in session:
-        session['scenarios'] = {}
-        # Add the first scenario to ensure we have at least one
-        session['scenarios']['1'] = base_scenarios[0]
-    
-    # Get the current scenario - convert scenario_id to string for dictionary key
-    scenario_id_str = str(scenario_id)
-    scenario = session['scenarios'].get(scenario_id_str)
-    
-    if not scenario:
-        # Try to generate the scenario
-        previous_choice = session['choices_made'][-1] if session['choices_made'] else None
-        previous_scenario_id = session['current_scenario']
-        previous_scenario_id_str = str(previous_scenario_id)
-        previous_scenario = session['scenarios'].get(previous_scenario_id_str)
-        
-        scenario = get_scenario(scenario_id, previous_choice, previous_scenario)
-        session['scenarios'][scenario_id_str] = scenario
-    
-    # Record choice
-    session['choices_made'] = session.get('choices_made', []) + [choice]
-    
-    # Check if choice is correct
-    if choice != scenario.get('correct_choice'):
+    # Update wrong choices and anger level
+    if not is_correct:
         session['wrong_choices'] = session.get('wrong_choices', 0) + 1
+        # Increase anger level, capping at the divorce threshold
+        max_anger = WRONG_CHOICES_THRESHOLD["divorce"]
+        session['anger_level'] = min(session.get('anger_level', 0) + 1, max_anger)
     
-    # Check if this is the final scenario
-    if scenario_id >= MAX_SCENARIOS:
-        # Force session to save
-        session.modified = True
-        return redirect(url_for('game_result'))
-        
-    # Determine next scenario based on choice
-    if choice == 'A':
-        next_scenario = scenario.get('next_scenario_a', scenario_id + 1)
+    # Update session data
+    choices = session.get('choices', [])
+    choices.append({
+        'scenario_id': scenario_id,
+        'choice': choice_id,
+        'is_correct': is_correct,
+        'title': scenario.get('title', ''),
+        'description': scenario.get('description', ''),
+        'choice_text': scenario.get(f'choice_{choice_id.lower()}', ''),
+        'difficulty': scenario.get('difficulty', 'Orta')
+    })
+    session['choices'] = choices
+    
+    # Determine the next URL
+    total_scenarios = session.get('total_scenarios', 10)
+    next_scenario_id = int(scenario_id) + 1
+    
+    if next_scenario_id > total_scenarios:
+        next_url = url_for('show_result')
     else:
-        next_scenario = scenario.get('next_scenario_b', scenario_id + 1)
+        session['current_scenario_id'] = next_scenario_id
+        next_url = url_for('play_game')
     
-    # Ensure next_scenario is within valid range
-    next_scenario = min(max(next_scenario, 2), MAX_SCENARIOS)
-    
-    # Check if we've already visited this scenario - avoid loops
-    visited = session.get('visited_scenarios', [])
-    loops_avoided = 0
-    
-    while str(next_scenario) in visited and loops_avoided < 5 and next_scenario < MAX_SCENARIOS:
-        # If we've already visited this scenario, go to the next one
-        next_scenario += 1
-        loops_avoided += 1
-    
-    # Record that we've visited this scenario
-    visited.append(str(next_scenario))
-    session['visited_scenarios'] = visited
-    
-    # Update current scenario
-    session['current_scenario'] = str(next_scenario)
-    
-    # Force session to save
-    session.modified = True
-    
-    # Check if we've reached the maximum number of scenarios or visited too many
-    if int(next_scenario) > MAX_SCENARIOS or len(visited) > MAX_SCENARIOS + 5:
-        return redirect(url_for('game_result'))
-    
-    return redirect(url_for('show_scenario', scenario_id=int(next_scenario)))
+    # Return JSON response if the request was JSON
+    if request.is_json:
+        return jsonify({
+            'status': 'success',
+            'correct': is_correct,
+            'next_url': next_url,
+            'scenario_id': scenario_id,
+            'choice': choice_id,
+            'anger_level': session.get('anger_level', 0) # Include anger level in response
+        })
+    else:
+        return redirect(next_url)
 
 @app.route('/history')
 def game_history():
@@ -891,6 +944,78 @@ def make_tutorial_choice():
     session.modified = True
     
     return redirect(url_for('show_tutorial', scenario_id=next_scenario))
+
+@app.route('/game')
+def play_game():
+    # Make sure session is permanent
+    session.permanent = True
+    
+    # Initialize session variables if needed
+    if 'current_scenario_id' not in session:
+        session['current_scenario_id'] = 1
+    
+    if 'scenarios' not in session or not session['scenarios']:
+        generate_scenarios()
+    
+    # Get the current scenario
+    current_scenario_id = session.get('current_scenario_id', 1)
+    scenarios = session.get('scenarios', [])
+    
+    if current_scenario_id > len(scenarios):
+        return redirect(url_for('show_result'))
+    
+    scenario = scenarios[current_scenario_id - 1]
+    total_scenarios = len(scenarios)
+    progress = int((current_scenario_id - 1) / total_scenarios * 100)
+    
+    # Get current anger level and max anger
+    current_anger = session.get('anger_level', 0)
+    max_anger = WRONG_CHOICES_THRESHOLD["divorce"] 
+    
+    # Pass additional CSS for the shake animation
+    shake_css = """
+    @keyframes shake {
+        0% { transform: translateX(0); }
+        10% { transform: translateX(-10px); }
+        20% { transform: translateX(10px); }
+        30% { transform: translateX(-10px); }
+        40% { transform: translateX(10px); }
+        50% { transform: translateX(-5px); }
+        60% { transform: translateX(5px); }
+        70% { transform: translateX(-5px); }
+        80% { transform: translateX(5px); }
+        90% { transform: translateX(-3px); }
+        100% { transform: translateX(0); }
+    }
+    
+    body.shake {
+        animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    }
+    """
+    
+    return render_template('dynamic/game.html', 
+                          scenario=scenario, 
+                          scenario_id=current_scenario_id, 
+                          total_scenarios=total_scenarios, 
+                          progress=progress,
+                          shake_css=shake_css,
+                          current_anger=current_anger, # Pass current anger
+                          max_anger=max_anger)        # Pass max anger
+
+def generate_all_scenarios():
+    """Pre-generate all scenarios and store them in the session"""
+    scenarios = [base_scenarios[0]] # Start with the base scenario
+    for i in range(2, MAX_SCENARIOS + 1):
+        # Try to provide context from a random previous scenario for better continuity
+        previous_scenario = random.choice(scenarios)
+        # Simulate a random choice for context generation
+        previous_choice = random.choice(['A', 'B'])
+        
+        new_scenario = generate_scenario(i, previous_choice, previous_scenario)
+        scenarios.append(new_scenario)
+        
+    session['scenarios'] = scenarios
+    session['total_scenarios'] = len(scenarios)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5012))
